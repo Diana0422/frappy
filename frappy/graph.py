@@ -10,8 +10,8 @@ class Graphs:
     class to plot data
     """
 
-    def __init__(self):
-        self.data_to_plot = {}
+    def __init__(self, data_to_plot):
+        self.data_to_plot = data_to_plot
         self.fig = go.Figure()
 
     def plot_series(self):
@@ -69,4 +69,3 @@ class Graphs:
         io.write_image(fig=self.fig, file='linear_regression_plot.png', format="png")
         return self.fig
 
-    

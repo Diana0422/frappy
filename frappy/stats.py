@@ -122,7 +122,7 @@ class Stats:
         series_titles = list(self.data_dict.keys())
 
         for index1 in range(len(self.data_dict)):
-            dataset1 = _interpolate_data(self.data_dict[series_titles[index1]])
+            dataset1 = interpolate_data(self.data_dict[series_titles[index1]])
             values1 = []
             for data in dataset1:
                 values1.append(data[1])
@@ -134,7 +134,7 @@ class Stats:
                             # same series: skip series
                             continue
                         values2 = []
-                        dataset2 = _interpolate_data(self.data_dict[series_titles[index2]])
+                        dataset2 = interpolate_data(self.data_dict[series_titles[index2]])
                         for data in dataset2:
                             values2.append(data[1])
 
@@ -158,7 +158,7 @@ class Stats:
         series_titles = list(self.data_dict.keys())
         for index in range(len(self.data_dict)):
             diffs = []
-            dataset = _interpolate_data(self.data_dict[series_titles[index]])
+            dataset = interpolate_data(self.data_dict[series_titles[index]])
             for i in range(len(dataset) - 1):
                 diff = dataset[i + 1][1] - dataset[i][1]
                 diffs.append(diff)
@@ -174,7 +174,7 @@ class Stats:
         series_titles = list(self.data_dict.keys())
         for index in range(len(self.data_dict)):
             diffs = []
-            dataset = _interpolate_data(self.data_dict[series_titles[index]])
+            dataset = interpolate_data(self.data_dict[series_titles[index]])
             for i in range(len(dataset)):
                 try:
                     diff = (dataset[i + 1][1] - dataset[i][1]) / dataset[i][1]
@@ -199,7 +199,7 @@ class Stats:
             values = []
             dataset = self.data_dict[series_titles[index]]
             if interpolate:
-                dataset = _interpolate_data(dataset)
+                dataset = interpolate_data(dataset)
             for i in range(n):
                 window += dataset[i][1]
 

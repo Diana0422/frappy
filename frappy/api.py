@@ -1,4 +1,8 @@
 import json
+import sys
+
+from frappy import DatabaseManager
+from model import *
 import time
 import requests
 
@@ -48,18 +52,27 @@ class FredApiManager:
         if model_type is ClassType.CATEGORY:
             try:
                 ret_objects = dict_data['categories']
-            except ValueError:
+                print(dict_data)
+            except KeyError:
+                print(dict_data)
                 print(dict_data['error_message'])
+                sys.exit()
         elif model_type is ClassType.SERIES:
             try:
                 ret_objects = dict_data['seriess']
-            except ValueError:
+                print(dict_data)
+            except KeyError:
+                print(dict_data)
                 print(dict_data['error_message'])
+                sys.exit()
         elif model_type is ClassType.OBSERVABLE:
             try:
                 ret_objects = dict_data['observations']
-            except ValueError:
+                print(dict_data)
+            except KeyError:
+                print(dict_data)
                 print(dict_data['error_message'])
+                sys.exit()
         return ret_objects
 
     def request_categories(self, start_category: Category, on_api) -> [Category]:
@@ -80,7 +93,7 @@ class FredApiManager:
             check = self.dbm.check_in_database(ClassType.CATEGORY, start_category.cat_id)
             if not check or on_api:
                 if node.leaf == 0:
-                    time.sleep(0.1)
+                    time.sleep(0.5)
                     children = self._generate_request(ClassType.CATEGORY, node.cat_id)
                     if len(children) == 0:
                         node.leaf = 1

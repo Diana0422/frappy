@@ -5,6 +5,7 @@ used in this package to interact with the FRED API.
 import sqlite3
 from sqlite3 import Error
 from model import *
+from api import *
 
 __database_conf = {'tables': ['Category', 'Series', 'Observable'],
                    'attributes': {'Category': [('id', 'INTEGER PRIMARY KEY'),
@@ -32,17 +33,21 @@ def _read_creation_conf() -> str:
     :return: a database query
     """
     tables = __database_conf['tables']
-    query = "CREATE TABLE IF NOT EXISTS "
-    first_time = True
+    creation_query = ""
     for i in range(len(tables)):
+        first_time = True
+        query = "CREATE TABLE IF NOT EXISTS "
         attrs = __database_conf['attributes'][tables[i]]
         query += tables[i] + "("
         for a in attrs:
             if not first_time:
                 query += ","
-            query += a[0]+a[1]
+            query += a[0] + " " + a[1]
+            first_time = False
         query += ");"
-    return query
+        creation_query += query
+        creation_query += " "
+    return creation_query
 
 
 class DatabaseManager:
@@ -51,6 +56,7 @@ class DatabaseManager:
     """
 
     def __init__(self, db_name: str):
+        self.conn = None
         if self.conn is None:
             if db_name.endswith(".db"):
                 self.db_name = db_name
@@ -60,8 +66,10 @@ class DatabaseManager:
             self.conn.execute('pragma journal_mode=wal')
             # create tables in the database configuration
             cur = self.conn.cursor()
-            cur.execute(_read_creation_conf())
-            self.conn.commit()
+            queries = _read_creation_conf().split(";")
+            for q in queries:
+                cur.execute(q)
+                self.conn.commit()
 
     def insert_category(self, category: Category):
         """
