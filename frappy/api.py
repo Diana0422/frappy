@@ -123,7 +123,7 @@ class FredApiManager:
         :return: the requested series list
         """
         ret_series = []
-        check = self.dbm.check_in_database(ClassType.CATEGORY, category.cat_id)
+        check = self.dbm.check_in_database(ClassType.SERIES, category.cat_id)
         if on_api or not check:
             print("DL Series with Cat_ID=" + str(category.cat_id))
             series_list = self._generate_request(ClassType.SERIES, category.cat_id)
