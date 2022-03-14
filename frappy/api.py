@@ -52,25 +52,19 @@ class FredApiManager:
         if model_type is ClassType.CATEGORY:
             try:
                 ret_objects = dict_data['categories']
-                print(dict_data)
             except KeyError:
-                print(dict_data)
                 print(dict_data['error_message'])
                 sys.exit()
         elif model_type is ClassType.SERIES:
             try:
                 ret_objects = dict_data['seriess']
-                print(dict_data)
             except KeyError:
-                print(dict_data)
                 print(dict_data['error_message'])
                 sys.exit()
         elif model_type is ClassType.OBSERVABLE:
             try:
                 ret_objects = dict_data['observations']
-                print(dict_data)
             except KeyError:
-                print(dict_data)
                 print(dict_data['error_message'])
                 sys.exit()
         return ret_objects
@@ -87,11 +81,13 @@ class FredApiManager:
         ret_categories = []
         i = 0
         while len(nodes_to_visit) != 0:
+            print(len(nodes_to_visit))
             i += 1
             node = nodes_to_visit.pop(0)
             ret_categories.append(node)
             check = self.dbm.check_in_database(ClassType.CATEGORY, start_category.cat_id)
             if not check or on_api:
+                print("DL Category with ID="+str(node.cat_id))
                 if node.leaf == 0:
                     time.sleep(0.5)
                     children = self._generate_request(ClassType.CATEGORY, node.cat_id)
@@ -108,7 +104,7 @@ class FredApiManager:
                     is_leaf = c["is_leaf"]
                 else:
                     is_leaf = 0
-                cat = Category(c["id"], c["name"], node.cat_id, is_leaf)
+                cat = Category(c["id"], c["name"], node.cat_id, is_leaf, 0)
                 # add subcategory
                 node.children.append(cat)
                 # add children to the list of nodes to visit
@@ -129,16 +125,23 @@ class FredApiManager:
         ret_series = []
         check = self.dbm.check_in_database(ClassType.CATEGORY, category.cat_id)
         if on_api or not check:
+            print("DL Series with Cat_ID=" + str(category.cat_id))
             series_list = self._generate_request(ClassType.SERIES, category.cat_id)
         else:
             series_list = self.dbm.get_series_list(category.cat_id)
         # create series object and save on db
+        series_len = len(series_list)
+        #if series_len == 0:
+        #    category.no_series = 1
+        #    self.dbm.update_category(category)
         for s in series_list:
-            s = Series(s['id'], s['title'], category.cat_id)
+            s = Series(s['id'], s['title'], category.cat_id, 0)
             category.series_list.append(s)
+            series_len -= 1
             if on_api or not check:
                 # insert series in db
-                self.dbm.insert_series(s)
+                do_commit = series_len == 0
+                self.dbm.insert_series(s, do_commit)
             # add series to the list
             ret_series.append(s)
         return ret_series

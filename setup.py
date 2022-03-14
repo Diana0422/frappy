@@ -8,16 +8,15 @@ setup(
     name='frappy',
     version='0.1.0',
     description='A Python package to explore FRED API',
-    url='https://github.com/shuds13/pyexample',
+    url='https://github.com/Diana0422/frappy.git',
     author='Mattia Antonangeli, Diana Pasquali',
-    author_email='diamerita@gmail.com, mattiaantonangeli@gmail.com',
+    author_email='mattiaantonangeli@gmail.com, diamerita@gmail.com',
     license='',
     packages=['frappy'],
     install_requires=['pandas',
                       'numpy',
                       'plotly',
-                      'requests',
-                      'sqlite'
+                      'requests'
                       ],
 
     classifiers=[

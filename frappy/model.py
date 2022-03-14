@@ -2,11 +2,12 @@ from enum import Enum
 
 
 class Category:
-    def __init__(self, cat_id, name, parent_id, leaf):
+    def __init__(self, cat_id, name, parent_id, leaf, no_series):
         self.cat_id = cat_id
         self.name = name
         self.parent_id = parent_id
         self.leaf = leaf
+        self.no_series = no_series
         self.children = []
         self.series_list = []
 
@@ -15,10 +16,11 @@ class Category:
 
 
 class Series:
-    def __init__(self, series_id, title, category_id):
+    def __init__(self, series_id, title, category_id, no_observables):
         self.series_id = series_id
         self.title = title
         self.category_id = category_id
+        self.no_observables = no_observables
         self.observables = []
 
     def __str__(self):

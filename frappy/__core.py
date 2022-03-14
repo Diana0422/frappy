@@ -13,9 +13,10 @@ __database_conf = {'tables': ['Category', 'Series', 'Observable'],
                                                ('parent_id', 'INTEGER REFERENCES Category(id) '
                                                              'ON DELETE CASCADE ON UPDATE CASCADE'),
                                                ('is_leaf', 'INTEGER'),
-                                               ],
+                                               ('no_series', 'INTEGER')],
                                   'Series': [('id', 'TEXT PRIMARY KEY'),
                                              ('title', 'TEXT NOT NULL'),
+                                             ('no_observables', 'INTEGER'),
                                              ('category_id', 'INTEGER REFERENCES Category(id) '
                                                              'ON DELETE CASCADE ON UPDATE CASCADE')],
                                   'Observable': [('id', 'INTEGER PRIMARY KEY AUTOINCREMENT'),
@@ -77,32 +78,35 @@ class DatabaseManager:
         :param category: the category to insert
         :return: None
         """
-        insert_category_query = "REPLACE INTO Category VALUES(?,?,?,?)"
+        insert_category_query = "REPLACE INTO Category VALUES(?,?,?,?,?)"
         values = [category.cat_id, category.name]
         if category.parent_id is not None:
             values.append(category.parent_id)
         else:
             values.append(None)
         values.append(category.leaf)
+        values.append(category.no_series)
         try:
             cur = self.conn.cursor()
             cur.execute(insert_category_query, values)
             self.conn.commit()
         except Error as e:
+
             print(e)
 
-    def insert_series(self, series: Series):
+    def insert_series(self, series: Series, commit_flag):
         """
         insert a new Series object in the database
         :param series: the series to insert
         :return: None
         """
-        insert_series_query = "REPLACE INTO Series VALUES(?,?,?)"
-        values = [series.series_id, series.title, series.category_id]
+        insert_series_query = "REPLACE INTO Series VALUES(?,?,?,?)"
+        values = [series.series_id, series.title, series.category_id, series.no_observables]
         try:
             cur = self.conn.cursor()
             cur.execute(insert_series_query, values)
-            self.conn.commit()
+            if commit_flag==1:
+                self.conn.commit()
         except Error as e:
             print(e)
 
@@ -195,8 +199,8 @@ class DatabaseManager:
         :param category: the new state of the Category
         :return: None
         """
-        update_category_query = "UPDATE Category SET name=?, parent_id=?, is_leaf=? where id=?"
-        values = [category.name, category.parent_id, category.leaf, category.cat_id]
+        update_category_query = "UPDATE Category SET name=?, parent_id=?, is_leaf=?, no_series=? where id=?"
+        values = [category.name, category.parent_id, category.leaf, category.cat_id, category.no_series]
         try:
             c = self.conn.cursor()
             c.execute(update_category_query, values)
@@ -210,8 +214,8 @@ class DatabaseManager:
         :param series: the new state of the Series
         :return: None
         """
-        update_series_query = "UPDATE Series SET title=?, category_id=? where id=?"
-        values = [series.title, series.category_id, series.series_id]
+        update_series_query = "UPDATE Series SET title=?, category_id=?, no_observables=? where id=?"
+        values = [series.title, series.category_id, series.series_id, series.no_observables]
         try:
             cur = self.conn.cursor()
             cur.execute(update_series_query, values)
