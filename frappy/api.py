@@ -80,16 +80,18 @@ class FredApiManager:
         nodes_to_visit = [start_category]
         ret_categories = []
         i = 0
+        if start_category.cat_id == 0:
+            self.dbm.insert_category(start_category)
         while len(nodes_to_visit) != 0:
             print(len(nodes_to_visit))
             i += 1
             node = nodes_to_visit.pop(0)
             ret_categories.append(node)
-            check = self.dbm.check_in_database(ClassType.CATEGORY, start_category.cat_id)
+            check = self.dbm.check_in_database(ClassType.CATEGORY, node.cat_id)
             if not check or on_api:
                 print("DL Category with ID="+str(node.cat_id))
                 if node.leaf == 0:
-                    time.sleep(0.5)
+                    time.sleep(0.8)
                     children = self._generate_request(ClassType.CATEGORY, node.cat_id)
                     if len(children) == 0:
                         node.leaf = 1
