@@ -57,7 +57,8 @@ class FredApiManager:
                 sys.exit()
         elif model_type is ClassType.SERIES:
             try:
-                ret_objects = dict_data['seriess']
+                if dict_data["count"]!=0:
+                    ret_objects = dict_data['seriess']
             except KeyError:
                 print(dict_data['error_message'])
                 sys.exit()
@@ -68,6 +69,11 @@ class FredApiManager:
                 print(dict_data['error_message'])
                 sys.exit()
         return ret_objects
+
+    def req_cat_start(self, start_category: Category, on_api):
+        print(start_category)
+        self.dbm.insert_category(start_category)
+        self.request_categories(start_category, on_api)
 
     def request_categories(self, start_category: Category, on_api) -> [Category]:
         """
@@ -80,8 +86,7 @@ class FredApiManager:
         nodes_to_visit = [start_category]
         ret_categories = []
         i = 0
-        if start_category.cat_id == 0:
-            self.dbm.insert_category(start_category)
+
         while len(nodes_to_visit) != 0:
             print(len(nodes_to_visit))
             i += 1
@@ -89,9 +94,9 @@ class FredApiManager:
             ret_categories.append(node)
             check = self.dbm.check_in_database(ClassType.CATEGORY, node.cat_id)
             if not check or on_api:
-                print("DL Category with ID="+str(node.cat_id))
                 if node.leaf == 0:
-                    time.sleep(0.8)
+                    print("DL Category with ID=" + str(node.cat_id))
+                    time.sleep(1)
                     children = self._generate_request(ClassType.CATEGORY, node.cat_id)
                     if len(children) == 0:
                         node.leaf = 1
@@ -126,16 +131,18 @@ class FredApiManager:
         """
         ret_series = []
         check = self.dbm.check_in_database(ClassType.SERIES, category.cat_id)
+        print(check)
         if on_api or not check:
             print("DL Series with Cat_ID=" + str(category.cat_id))
+            time.sleep(0.3)
             series_list = self._generate_request(ClassType.SERIES, category.cat_id)
         else:
             series_list = self.dbm.get_series_list(category.cat_id)
         # create series object and save on db
         series_len = len(series_list)
-        #if series_len == 0:
-        #    category.no_series = 1
-        #    self.dbm.update_category(category)
+        if series_len == 0:
+            category.no_series = 1
+            self.dbm.update_category(category)
         for s in series_list:
             s = Series(s['id'], s['title'], category.cat_id, 0)
             category.series_list.append(s)

@@ -72,13 +72,16 @@ class DatabaseManager:
                 cur.execute(q)
                 self.conn.commit()
 
+    def commit(self):
+        self.conn.commit()
+
     def insert_category(self, category: Category):
         """
         insert a new Category in the database
         :param category: the category to insert
         :return: None
         """
-        insert_category_query = "REPLACE INTO Category VALUES(?,?,?,?,?)"
+        insert_category_query = "REPLACE INTO Category (id, name, parent_id, is_leaf, no_series) VALUES(?,?,?,?,?)"
         values = [category.cat_id, category.name]
         if category.parent_id is not None:
             values.append(category.parent_id)
@@ -91,7 +94,6 @@ class DatabaseManager:
             cur.execute(insert_category_query, values)
             self.conn.commit()
         except Error as e:
-
             print(e)
 
     def insert_series(self, series: Series, commit_flag):
@@ -100,7 +102,7 @@ class DatabaseManager:
         :param series: the series to insert
         :return: None
         """
-        insert_series_query = "REPLACE INTO Series VALUES(?,?,?,?)"
+        insert_series_query = "REPLACE INTO Series (id, title, category_id, no_observables) VALUES(?,?,?,?)"
         values = [series.series_id, series.title, series.category_id, series.no_observables]
         try:
             cur = self.conn.cursor()
@@ -116,7 +118,7 @@ class DatabaseManager:
         :param observable: the observable to insert
         :return: None
         """
-        insert_observable_query = "REPLACE INTO Observable VALUES(?,?,?)"
+        insert_observable_query = "REPLACE INTO Observable(date, value, series_id) VALUES(?,?,?)"
         values = [observable.date, observable.value, observable.series]
         try:
             cur = self.conn.cursor()
@@ -200,7 +202,7 @@ class DatabaseManager:
         :return: None
         """
         update_category_query = "UPDATE Category SET name=?, parent_id=?, is_leaf=?, no_series=? where id=?"
-        values = [category.name, category.parent_id, category.leaf, category.cat_id, category.no_series]
+        values = [category.name, category.parent_id, category.leaf, category.no_series, category.cat_id]
         try:
             c = self.conn.cursor()
             c.execute(update_category_query, values)
@@ -215,7 +217,7 @@ class DatabaseManager:
         :return: None
         """
         update_series_query = "UPDATE Series SET title=?, category_id=?, no_observables=? where id=?"
-        values = [series.title, series.category_id, series.series_id, series.no_observables]
+        values = [series.title, series.category_id, series.no_observables, series.series_id]
         try:
             cur = self.conn.cursor()
             cur.execute(update_series_query, values)
