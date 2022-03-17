@@ -13,12 +13,13 @@ __database_conf = {'tables': ['Category', 'Series', 'Observable'],
                                                ('parent_id', 'INTEGER REFERENCES Category(id) '
                                                              'ON DELETE CASCADE ON UPDATE CASCADE'),
                                                ('is_leaf', 'INTEGER'),
-                                               ('no_series', 'INTEGER')],
+                                               ('n_children', 'INTEGER'),
+                                               ('n_series', 'INTEGER')],
                                   'Series': [('id', 'TEXT PRIMARY KEY'),
                                              ('title', 'TEXT NOT NULL'),
                                              ('category_id', 'INTEGER REFERENCES Category(id) '
                                                              'ON DELETE CASCADE ON UPDATE CASCADE'),
-                                             ('no_observables', 'INTEGER')],
+                                             ('n_observables', 'INTEGER')],
                                   'Observable': [('id', 'INTEGER PRIMARY KEY AUTOINCREMENT'),
                                                  ('date', 'TEXT NOT NULL'),
                                                  ('value', 'INTEGER'),
@@ -81,14 +82,15 @@ class DatabaseManager:
         :param category: the category to insert
         :return: None
         """
-        insert_category_query = "REPLACE INTO Category (id, name, parent_id, is_leaf, no_series) VALUES(?,?,?,?,?)"
+        insert_category_query = "REPLACE INTO Category (id, name, parent_id, is_leaf, n_children, n_series) VALUES(?,?,?,?,?,?)"
         values = [category.cat_id, category.name]
         if category.parent_id is not None:
             values.append(category.parent_id)
         else:
             values.append(None)
         values.append(category.leaf)
-        values.append(category.no_series)
+        values.append(category.n_children)
+        values.append(category.n_series)
         try:
             cur = self.conn.cursor()
             cur.execute(insert_category_query, values)
@@ -102,8 +104,8 @@ class DatabaseManager:
         :param series: the series to insert
         :return: None
         """
-        insert_series_query = "REPLACE INTO Series (id, title, category_id, no_observables) VALUES(?,?,?,?)"
-        values = [series.series_id, series.title, series.category_id, series.no_observables]
+        insert_series_query = "REPLACE INTO Series (id, title, category_id, n_observables) VALUES(?,?,?,?)"
+        values = [series.series_id, series.title, series.category_id, series.n_observables]
         try:
             cur = self.conn.cursor()
             cur.execute(insert_series_query, values)
@@ -112,7 +114,7 @@ class DatabaseManager:
         except Error as e:
             print(e)
 
-    def insert_observable(self, observable: Observable):
+    def insert_observable(self, observable: Observable, commit_flag):
         """
         insert a new Observable object in the database
         :param observable: the observable to insert
@@ -123,7 +125,8 @@ class DatabaseManager:
         try:
             cur = self.conn.cursor()
             cur.execute(insert_observable_query, values)
-            self.conn.commit()
+            if commit_flag == 1:
+                self.conn.commit()
         except Error as e:
             print(e)
 
@@ -144,6 +147,22 @@ class DatabaseManager:
             print(e)
         return sub
 
+    def get_category_list(self) -> [Category]:
+        """
+        get a list of categories
+        :return: list of Category
+        """
+        get_category_list_query = "SELECT * FROM Category"
+        category_list = []
+        try:
+            cur = self.conn.cursor()
+            cur.execute(get_category_list_query)
+            columns = [col[0] for col in cur.description]
+            category_list = [dict(zip(columns, row)) for row in cur.fetchall()]
+        except Error as e:
+            print(e)
+        return category_list
+
     def get_series_list(self, category_id) -> [Series]:
         """
         get a list of series of a given category
@@ -161,6 +180,22 @@ class DatabaseManager:
             print(e)
         return series_list
 
+    def get_series_number(self, category_id):
+        """
+                get number of series of a given category
+                :param category_id: the given category
+                :return: number of Series integer
+                """
+        get_series_number_query = "SELECT n_series FROM Category WHERE id=?"
+        series_number = -1
+        try:
+            cur = self.conn.cursor()
+            cur.execute(get_series_number_query, [category_id])
+            series_number = cur.fetchone()[0]
+        except Error as e:
+            print(e)
+        return series_number
+
     def get_observable_list(self, series_id) -> [Observable]:
         """
         get a list of observables of a given series
@@ -177,6 +212,22 @@ class DatabaseManager:
         except Error as e:
             print(e)
         return observables
+
+    def get_observables_number(self, category_id):
+        """
+                get number of series of a given category
+                :param category_id: the given category
+                :return: number of Series integer
+                """
+        get_observables_number_query = "SELECT n_observables FROM Series WHERE id=?"
+        observables_number = -1
+        try:
+            cur = self.conn.cursor()
+            cur.execute(get_observables_number_query, [category_id])
+            observables_number = cur.fetchone()[0]
+        except Error as e:
+            print(e)
+        return observables_number
 
     def get_series(self, series_id) -> Series:
         """
@@ -201,8 +252,8 @@ class DatabaseManager:
         :param category: the new state of the Category
         :return: None
         """
-        update_category_query = "UPDATE Category SET name=?, parent_id=?, is_leaf=?, no_series=? where id=?"
-        values = [category.name, category.parent_id, category.leaf, category.no_series, category.cat_id]
+        update_category_query = "UPDATE Category SET name=?, parent_id=?, is_leaf=?, n_children=?, n_series=? where id=?"
+        values = [category.name, category.parent_id, category.leaf, category.n_children, category.n_series, category.cat_id]
         try:
             c = self.conn.cursor()
             c.execute(update_category_query, values)
@@ -216,8 +267,8 @@ class DatabaseManager:
         :param series: the new state of the Series
         :return: None
         """
-        update_series_query = "UPDATE Series SET title=?, category_id=?, no_observables=? where id=?"
-        values = [series.title, series.category_id, series.no_observables, series.series_id]
+        update_series_query = "UPDATE Series SET title=?, category_id=?, n_observables=? where id=?"
+        values = [series.title, series.category_id, series.n_observables, series.series_id]
         try:
             cur = self.conn.cursor()
             cur.execute(update_series_query, values)
@@ -252,9 +303,12 @@ class DatabaseManager:
         ret = None
         if model_type is ClassType.CATEGORY:
             ret = self.get_subcategories(attribute)
+            return len(ret) != 0
         elif model_type is ClassType.SERIES:
-            ret = self.get_series_list(attribute)
+            ret = self.get_series_number(attribute)
+            return ret != 0
         elif model_type is ClassType.OBSERVABLE:
-            ret = self.get_observable_list(attribute)
-        return len(ret) != 0
+            ret = self.get_observables_number(attribute)
+            return ret != 0
+
 

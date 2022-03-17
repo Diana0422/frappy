@@ -57,7 +57,7 @@ class FredApiManager:
                 sys.exit()
         elif model_type is ClassType.SERIES:
             try:
-                if dict_data["count"]!=0:
+                if dict_data["count"] != 0:
                     ret_objects = dict_data['seriess']
             except KeyError:
                 print(dict_data['error_message'])
@@ -71,9 +71,8 @@ class FredApiManager:
         return ret_objects
 
     def req_cat_start(self, start_category: Category, on_api):
-        print(start_category)
         self.dbm.insert_category(start_category)
-        self.request_categories(start_category, on_api)
+        return self.request_categories(start_category, on_api)
 
     def request_categories(self, start_category: Category, on_api) -> [Category]:
         """
@@ -88,14 +87,11 @@ class FredApiManager:
         i = 0
 
         while len(nodes_to_visit) != 0:
-            print(len(nodes_to_visit))
             i += 1
             node = nodes_to_visit.pop(0)
-            ret_categories.append(node)
             check = self.dbm.check_in_database(ClassType.CATEGORY, node.cat_id)
             if not check or on_api:
                 if node.leaf == 0:
-                    print("DL Category with ID=" + str(node.cat_id))
                     time.sleep(1)
                     children = self._generate_request(ClassType.CATEGORY, node.cat_id)
                     if len(children) == 0:
@@ -105,13 +101,15 @@ class FredApiManager:
                     children = []
             else:
                 children = self.dbm.get_subcategories(node.cat_id)
-
+            node.n_children = len(children)
+            self.dbm.update_category(node)
+            ret_categories.append(node)
             for c in children:
                 if check and not on_api:
                     is_leaf = c["is_leaf"]
                 else:
                     is_leaf = 0
-                cat = Category(c["id"], c["name"], node.cat_id, is_leaf, 0)
+                cat = Category(c["id"], c["name"], node.cat_id, is_leaf, None, None)
                 # add subcategory
                 node.children.append(cat)
                 # add children to the list of nodes to visit
@@ -131,20 +129,23 @@ class FredApiManager:
         """
         ret_series = []
         check = self.dbm.check_in_database(ClassType.SERIES, category.cat_id)
-        print(check)
         if on_api or not check:
-            print("DL Series with Cat_ID=" + str(category.cat_id))
-            time.sleep(0.3)
-            series_list = self._generate_request(ClassType.SERIES, category.cat_id)
+
+            if not category.n_series:
+                time.sleep(0.5)
+                series_list = self._generate_request(ClassType.SERIES, category.cat_id)
+            else:
+                series_list = []
         else:
             series_list = self.dbm.get_series_list(category.cat_id)
         # create series object and save on db
         series_len = len(series_list)
-        if series_len == 0:
-            category.no_series = 1
-            self.dbm.update_category(category)
+        category.n_series = series_len
+        self.dbm.update_category(category)
         for s in series_list:
-            s = Series(s['id'], s['title'], category.cat_id, 0)
+            if s['id'] is None:
+                continue
+            s = Series(s['id'], s['title'], category.cat_id, None)
             category.series_list.append(s)
             series_len -= 1
             if on_api or not check:
@@ -166,16 +167,24 @@ class FredApiManager:
         ret_observables = []
         check = self.dbm.check_in_database(ClassType.OBSERVABLE, series.series_id)
         if on_api or not check:
-            observations = self._generate_request(ClassType.OBSERVABLE, series.series_id)
+            if not series.n_observables:
+                observations = self._generate_request(ClassType.OBSERVABLE, series.series_id)
+            else:
+                observations = []
         else:
             observations = self.dbm.get_observable_list(series.series_id)
         # create observable object and save on db
+        observations_len = len(observations)
+        series.n_observables = observations_len
+        self.dbm.update_series(series)
         for o in observations:
-            o = Observable(o['date'], o['value'], series.series_id)
+            o = Observable(0, o['date'], o['value'], series.series_id)
             series.observables.append(o)
+            observations_len -= 1
             if on_api or not check:
                 # insert observable in db
-                self.dbm.insert_observable(o)
+                do_commit = observations_len == 0
+                self.dbm.insert_observable(o, do_commit)
             # add observable to the list
             ret_observables.append(o)
         return ret_observables

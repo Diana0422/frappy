@@ -29,7 +29,8 @@ class Graphs:
             df = pd.DataFrame(inter_dataset, columns=["Date", "Value"])
             self.fig.add_traces([go.Scatter(x=df['Date'], y=df['Value'], name=series_titles[index])])
             # save plot image on file
-        io.write_image(fig=self.fig, file='series_plot.png', format="png")
+        #io.write_image(fig=self.fig, file='series_plot.png', format="png")
+
         return self.fig
 
     def plot_moving_average(self):

@@ -2,29 +2,30 @@ from enum import Enum
 
 
 class Category:
-    def __init__(self, cat_id, name, parent_id, leaf, no_series):
+    def __init__(self, cat_id, name, parent_id, leaf, n_children, n_series):
         self.cat_id = cat_id
         self.name = name
         self.parent_id = parent_id
         self.leaf = leaf
-        self.no_series = no_series
+        self.n_children = n_children
+        self.n_series = n_series
         self.children = []
         self.series_list = []
 
     def __str__(self):
-        return "ID: " + str(self.cat_id) + " NAME: " + self.name + " parentID: " + str(self.parent_id)
+        return "ID: " + str(self.cat_id) + " NAME: " + self.name + " parentID: " + str(self.parent_id) + " leaf: " + str(self.leaf) + " n_series: " + str(self.n_series)
 
 
 class Series:
-    def __init__(self, series_id, title, category_id, no_observables):
+    def __init__(self, series_id, title, category_id, n_observables):
         self.series_id = series_id
         self.title = title
         self.category_id = category_id
-        self.no_observables = no_observables
+        self.n_observables = n_observables
         self.observables = []
 
     def __str__(self):
-        return "ID: " + str(self.series_id) + " TITLE: " + self.title + " categoryID: " + str(self.category_id)
+        return "ID: " + str(self.series_id) + " TITLE: " + str(self.title) + " categoryID: " + str(self.category_id)
 
 
 class Observable:
