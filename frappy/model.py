@@ -46,3 +46,22 @@ class ClassType(Enum):
     CATEGORY = 1
     SERIES = 2
     OBSERVABLE = 3
+    CHILD = 4
+
+
+def object_convert(model_type: ClassType, dict_state: dict):
+    """
+    converts format from dictionary to model object
+    :param model_type: type of the model class
+    :param dict_state: dictionary of the object state
+    :return: object from model
+    """
+    obj = None
+    if model_type is ClassType.CATEGORY:
+        obj = Category(dict_state['id'], dict_state['name'], dict_state['parent_id'], dict_state['is_leaf'], dict_state['n_children'], dict_state['n_series'])
+    elif model_type is ClassType.SERIES:
+        obj = Series(dict_state['id'], dict_state['title'], dict_state['category_id'], dict_state['n_observables'])
+    elif model_type is ClassType.OBSERVABLE:
+        obj = Observable(dict_state['id'], dict_state['date'], dict_state['value'], dict_state['series_id'])
+    return obj
+

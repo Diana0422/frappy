@@ -16,7 +16,8 @@ setup(
     install_requires=['pandas',
                       'numpy',
                       'plotly',
-                      'requests'
+                      'requests',
+                      'python-kaleido'
                       ],
 
     classifiers=[
