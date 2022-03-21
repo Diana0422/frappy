@@ -84,6 +84,7 @@ class DatabaseManager:
         """
         insert_category_query = "REPLACE INTO Category (id, name, parent_id, is_leaf, n_children, n_series) VALUES(?,?,?,?,?,?)"
         values = [category.cat_id, category.name]
+        # TODO probabilemte si può levare il controllo sul parent id
         if category.parent_id is not None:
             values.append(category.parent_id)
         else:
@@ -109,7 +110,7 @@ class DatabaseManager:
         try:
             cur = self.conn.cursor()
             cur.execute(insert_series_query, values)
-            if commit_flag==1:
+            if commit_flag == 1:
                 self.conn.commit()
         except Error as e:
             print(e)
