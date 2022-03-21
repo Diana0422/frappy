@@ -1,7 +1,7 @@
 import json
 import sys
 
-from frappy import DatabaseManager
+from frappy.__core import DatabaseManager
 from model import *
 import time
 import requests
@@ -16,7 +16,7 @@ class FredApiManager:
 
     def __init__(self, api_key):
         self.key = api_key
-        self.cat_URL = "https://api.stlouisfed.org/fred/category/children?"
+        self.children_URL = "https://api.stlouisfed.org/fred/category/children?"
         self.series_URL = "https://api.stlouisfed.org/fred/category/series?"
         self.observable_URL = "https://api.stlouisfed.org/fred/series/observations?"
         self.dbm = DatabaseManager('frappy.db')
@@ -29,8 +29,8 @@ class FredApiManager:
         :return: URL string
         """
         specific_url = ""
-        if model_type is ClassType.CATEGORY:
-            specific_url = self.cat_URL + "category_id=" + str(value) + "&api_key=" + self.key + "&file_type=json"
+        if model_type is ClassType.CHILD:
+            specific_url = self.children_URL + "category_id=" + str(value) + "&api_key=" + self.key + "&file_type=json"
         elif model_type is ClassType.SERIES:
             specific_url = self.series_URL + "category_id=" + str(value) + "&api_key=" + self.key + "&file_type=json"
         elif model_type is ClassType.OBSERVABLE:
@@ -49,7 +49,7 @@ class FredApiManager:
         json_data = conn.text
         dict_data = json.loads(json_data)
         ret_objects = []
-        if model_type is ClassType.CATEGORY:
+        if model_type is ClassType.CHILD:
             try:
                 ret_objects = dict_data['categories']
             except KeyError:
@@ -71,7 +71,10 @@ class FredApiManager:
         return ret_objects
 
     def req_cat_start(self, start_category: Category, on_api):
-        self.dbm.insert_category(start_category)
+        # check if starting category is on database
+        check = self.dbm.check_in_database(ClassType.CATEGORY, start_category.cat_id)
+        if not check:
+            self.dbm.insert_category(start_category)
         return self.request_categories(start_category, on_api)
 
     def request_categories(self, start_category: Category, on_api) -> [Category]:
@@ -89,11 +92,11 @@ class FredApiManager:
         while len(nodes_to_visit) != 0:
             i += 1
             node = nodes_to_visit.pop(0)
-            check = self.dbm.check_in_database(ClassType.CATEGORY, node.cat_id)
+            check = self.dbm.check_in_database(ClassType.CHILD, node.cat_id)
             if not check or on_api:
-                if node.leaf == 0:
+                if node.leaf == 0 or node.leaf is None:
                     time.sleep(1)
-                    children = self._generate_request(ClassType.CATEGORY, node.cat_id)
+                    children = self._generate_request(ClassType.CHILD, node.cat_id)
                     if len(children) == 0:
                         node.leaf = 1
                         self.dbm.update_category(node)
@@ -101,15 +104,18 @@ class FredApiManager:
                     children = []
             else:
                 children = self.dbm.get_subcategories(node.cat_id)
-            node.n_children = len(children)
-            self.dbm.update_category(node)
             ret_categories.append(node)
             for c in children:
                 if check and not on_api:
                     is_leaf = c["is_leaf"]
+                    n_children = c["n_children"]
+                    n_series = c["n_series"]
                 else:
                     is_leaf = 0
-                cat = Category(c["id"], c["name"], node.cat_id, is_leaf, None, None)
+                    n_children = None
+                    n_series = None
+                print(c)
+                cat = Category(c["id"], c["name"], node.cat_id, is_leaf, n_children, n_series)
                 # add subcategory
                 node.children.append(cat)
                 # add children to the list of nodes to visit
@@ -117,6 +123,15 @@ class FredApiManager:
                 if not check or on_api:
                     # insert category in db
                     self.dbm.insert_category(cat)
+
+            # update the number of children of the visited node
+            if not check or on_api:
+                node.n_children = len(children)
+                self.dbm.update_category(node)
+
+        # renew the root element with the collected data
+        root_data = self.dbm.get_category(ret_categories[0].cat_id)
+        ret_categories[0] = object_convert(ClassType.CATEGORY, root_data[0])
         return ret_categories
 
     def request_series(self, category: Category, on_api) -> [Series]:
@@ -140,8 +155,7 @@ class FredApiManager:
             series_list = self.dbm.get_series_list(category.cat_id)
         # create series object and save on db
         series_len = len(series_list)
-        category.n_series = series_len
-        self.dbm.update_category(category)
+        series_number = len(series_list)
         for s in series_list:
             if s['id'] is None:
                 continue
@@ -154,6 +168,8 @@ class FredApiManager:
                 self.dbm.insert_series(s, do_commit)
             # add series to the list
             ret_series.append(s)
+        category.n_series = series_number
+        self.dbm.update_category(category)
         return ret_series
 
     def request_observables(self, series: Series, on_api) -> [Observable]:
@@ -168,15 +184,17 @@ class FredApiManager:
         check = self.dbm.check_in_database(ClassType.OBSERVABLE, series.series_id)
         if on_api or not check:
             if not series.n_observables:
+                time.sleep(0.5)
                 observations = self._generate_request(ClassType.OBSERVABLE, series.series_id)
+                print("from API: {}".format(observations))
             else:
                 observations = []
         else:
             observations = self.dbm.get_observable_list(series.series_id)
+            print("from DB: {}".format(observations))
         # create observable object and save on db
         observations_len = len(observations)
-        series.n_observables = observations_len
-        self.dbm.update_series(series)
+        number_obs = len(observations)
         for o in observations:
             o = Observable(0, o['date'], o['value'], series.series_id)
             series.observables.append(o)
@@ -187,4 +205,8 @@ class FredApiManager:
                 self.dbm.insert_observable(o, do_commit)
             # add observable to the list
             ret_observables.append(o)
+
+        # update number of series observables on database
+        series.n_observables = number_obs
+        self.dbm.update_series(series)
         return ret_observables

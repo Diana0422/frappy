@@ -102,6 +102,7 @@ class DatabaseManager:
     def insert_series(self, series: Series, commit_flag):
         """
         insert a new Series object in the database
+        :param commit_flag:
         :param series: the series to insert
         :return: None
         """
@@ -130,6 +131,39 @@ class DatabaseManager:
                 self.conn.commit()
         except Error as e:
             print(e)
+
+    def get_category(self, category_id) -> Category:
+        """
+        retrieve a category with given id from the database
+        :param category_id: the id of the category to fetch
+        :return: Category object
+        """
+        get_category_query = "SELECT * FROM Category WHERE id=?"
+        sub = []
+        try:
+            cur = self.conn.cursor()
+            cur.execute(get_category_query, [category_id])
+            columns = [col[0] for col in cur.description]
+            sub = [dict(zip(columns, row)) for row in cur.fetchall()]
+        except Error as e:
+            print(e)
+        return sub
+
+    def get_series(self, series_id) -> Series:
+        """
+        retrieve a series with given id from the database
+        :param series_id: the id of the series to fetch
+        :return: Series object
+        """
+        get_series_query = "SELECT * FROM Series WHERE id=?"
+        try:
+            cur = self.conn.cursor()
+            cur.execute(get_series_query, [series_id])
+            columns = [col[0] for col in cur.description]
+            sub = [dict(zip(columns, row)) for row in cur.fetchall()]
+        except Error as e:
+            print(e)
+        return sub
 
     def get_subcategories(self, category_id) -> [Category]:
         """
@@ -183,10 +217,10 @@ class DatabaseManager:
 
     def get_series_number(self, category_id):
         """
-                get number of series of a given category
-                :param category_id: the given category
-                :return: number of Series integer
-                """
+        get number of series of a given category
+        :param category_id: the given category
+        :return: number of Series integer
+        """
         get_series_number_query = "SELECT n_series FROM Category WHERE id=?"
         series_number = -1
         try:
@@ -196,6 +230,22 @@ class DatabaseManager:
         except Error as e:
             print(e)
         return series_number
+
+    def get_children_number(self, category_id):
+        """
+        get the number of children of a given category
+        :param category_id:
+        :return:
+        """
+        get_children_number_query = "SELECT n_children FROM Category WHERE id=?"
+        children_number = -1
+        try:
+            cur = self.conn.cursor()
+            cur.execute(get_children_number_query, [category_id])
+            children_number = cur.fetchone()[0]
+        except Error as e:
+            print(e)
+        return children_number
 
     def get_observable_list(self, series_id) -> [Observable]:
         """
@@ -302,14 +352,27 @@ class DatabaseManager:
         :return: the number of elements present in the database. If 0, then the object is not present.
         """
         ret = None
-        if model_type is ClassType.CATEGORY:
-            ret = self.get_subcategories(attribute)
-            return len(ret) != 0
+        if model_type is ClassType.CHILD:
+            children = self.get_subcategories(attribute)
+            n_children = self.get_children_number(attribute)
+            return len(children) == n_children
+        elif model_type is ClassType.CATEGORY:
+            cat = self.get_category(attribute)
+            return len(cat) != 0
         elif model_type is ClassType.SERIES:
-            ret = self.get_series_number(attribute)
-            return ret != 0
+            n_series = self.get_series_number(attribute)
+            series_list = self.get_series_list(attribute)
+            result = len(series_list) == n_series and n_series is not None
+            return result
         elif model_type is ClassType.OBSERVABLE:
-            ret = self.get_observables_number(attribute)
-            return ret != 0
+            obs_list = self.get_observable_list(attribute)
+            n_observables = self.get_observables_number(attribute)
+            return len(obs_list) == n_observables and n_observables is not None
 
+    def close_db(self):
+        """
+        procedure to close the database connection
+        :return:
+        """
+        self.conn.close()
 

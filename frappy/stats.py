@@ -1,4 +1,6 @@
-from __core import *
+import sys
+
+import __core as core
 import numpy as np
 
 
@@ -61,27 +63,34 @@ class Stats:
         self.titles_map = {}
         self.data_sets = []
         self.number_of_series = 0
-        self.dbm = DatabaseManager('frappy.db')
+        self.dbm = core.DatabaseManager('frappy.db')
 
-    def _parse_to_dict(self, dataset: [Observable], index):
+    def parse_to_dict(self, dataset_list: [[core.Observable]]) -> dict:
         """
         add the specified dataset to the dictionary of series to study
-        :param dataset: data added to the workflow
-        :param index: position in the dictionary
+        :param dataset_list: data added to the workflow
         :return: None
         """
-        data_buffer = []
+        total = {}
+        index = 0
         obs = None
-        for data in dataset:
-            obs = data
-            try:
-                value = float(data.value)
-            except ValueError:
-                value = None
+
+        for dataset in dataset_list:
+            data_buffer = []
+            for data in dataset:
+                try:
+                    value = float(data.value)
+                except ValueError:
+                    value = None
+                data_buffer.append([data.date, value])
+            total[data.series] = data_buffer
+            index += 1
             data_buffer.append([data.date, value])
-        series = self.dbm.get_series(obs.series_id)
-        self.data_dict[series.title] = data_buffer
-        self._map_position(index, series.title)
+            obs = data
+            self.data_dict[data.series] = data_buffer
+            self._map_position(self.number_of_series, data.series)
+            self.number_of_series += 1
+        return self.data_dict
 
     def _map_position(self, index, series_title):
         """
@@ -92,7 +101,7 @@ class Stats:
         """
         self.titles_map[index] = series_title
 
-    def add_dataset(self, dataset: [Observable]):
+    def add_dataset(self, dataset: [core.Observable]):
         """
         add a new dataset to the dictionary of datasets to study
         :param dataset: the dataset to be added
@@ -100,8 +109,7 @@ class Stats:
         """
         self.data_sets.append(dataset)
         index = self.data_sets.index(dataset)
-        self._parse_to_dict(dataset, index)
-        self.number_of_series += 1
+        self.parse_to_dict(dataset)
 
     def delete_dataset(self, index):
         """
@@ -198,6 +206,15 @@ class Stats:
             window = 0
             values = []
             dataset = self.data_dict[series_titles[index]]
+
+            # check n
+            print(len(dataset))
+            print(n)
+            if n > len(dataset):
+                #TODO exception
+                print("n is too big")
+                sys.exit(-1)
+
             if interpolate:
                 dataset = interpolate_data(dataset)
             for i in range(n):
