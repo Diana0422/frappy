@@ -159,7 +159,7 @@ class FredApiManager:
         for s in series_list:
             if s['id'] is None:
                 continue
-            s = Series(s['id'], s['title'], category.cat_id, None)
+            s = Series(s['id'], s['title'], category.cat_id, s['n_observables'])
             category.series_list.append(s)
             series_len -= 1
             if on_api or not check:
@@ -186,12 +186,12 @@ class FredApiManager:
             if not series.n_observables:
                 time.sleep(0.5)
                 observations = self._generate_request(ClassType.OBSERVABLE, series.series_id)
-                print("from API: {}".format(observations))
+                # print("from API: {}".format(observations))
             else:
                 observations = []
         else:
             observations = self.dbm.get_observable_list(series.series_id)
-            print("from DB: {}".format(observations))
+            # print("from DB: {}".format(observations))
         # create observable object and save on db
         observations_len = len(observations)
         number_obs = len(observations)
