@@ -52,9 +52,11 @@ if __name__ == '__main__':
     # INIZIO TEST stats.py
 
     print("time series")
-    graphs = Graphs(data_to_plot, "ggplot2", "svg")
+    graphs = Graphs(data_to_plot, "ggplot2", "png")
     graphs.plot_series(True)
     graphs.plot_moving_average(5, False)
+    graphs.plot_prime_differences()
+    graphs.plot_prime_differences_percent()
     graphs.plot_linear_regression()
     sys.exit()
 
