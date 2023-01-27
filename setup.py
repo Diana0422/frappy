@@ -17,7 +17,7 @@ setup(
                       'numpy',
                       'plotly',
                       'requests',
-                      'python-kaleido'
+                      'kaleido'
                       ],
 
     classifiers=[
