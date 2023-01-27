@@ -1,6 +1,7 @@
 import sqlite3
-from sqlite3 import Error
 from .model import *
+from sqlite3 import Error
+
 from .api import *
 
 

@@ -3,6 +3,8 @@ import sys
 from .__core import *
 import numpy as np
 
+from .model import Observable
+
 
 def interpolate_data(data_buffer: [[str, float]]) -> [[str, float]]:
     """

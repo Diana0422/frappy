@@ -1,12 +1,12 @@
 import json
 import sys
-
-from frappy.__core import DatabaseManager
-from .model import *
 import time
+
 import requests
 
 from .__core import *
+from .__core import DatabaseManager
+from .model import ClassType, Category, object_convert, Series, Observable
 
 
 class FredApiManager:

@@ -1,10 +1,12 @@
-from frappy import *
-from frappy.__core import DatabaseManager
+import sys
+import time
+from frappy.api import FredApiManager
+from frappy.graph import Graphs
+from frappy.model import Category
 
 if __name__ == '__main__':
 
     f_api = FredApiManager("e5889c59144fa74e5235e15a0d1037ff")
-    dbm = DatabaseManager('frappy.db')
     # root = Category(0, "root", None, None, None, None)
     root = Category(154, "Missouri", None, None, None, None)
 
@@ -50,7 +52,7 @@ if __name__ == '__main__':
     # INIZIO TEST stats.py
 
     print("time series")
-    graphs = Graphs(data_to_plot, "plotly_dark", "svg")
+    graphs = Graphs(data_to_plot, "ggplot2", "svg")
     graphs.plot_series(True)
     graphs.plot_moving_average(5, False)
     graphs.plot_linear_regression()
