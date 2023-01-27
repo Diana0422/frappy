@@ -2,11 +2,11 @@ import json
 import sys
 
 from frappy.__core import DatabaseManager
-from model import *
+from .model import *
 import time
 import requests
 
-from __core import *
+from .__core import *
 
 
 class FredApiManager:
@@ -147,7 +147,7 @@ class FredApiManager:
         if on_api or not check:
 
             if not category.n_series:
-                time.sleep(0.5)
+                time.sleep(1)
                 series_list = self._generate_request(ClassType.SERIES, category.cat_id)
             else:
                 series_list = []
@@ -184,14 +184,13 @@ class FredApiManager:
         check = self.dbm.check_in_database(ClassType.OBSERVABLE, series.series_id)
         if on_api or not check:
             if not series.n_observables:
-                time.sleep(0.5)
+                time.sleep(1)
                 observations = self._generate_request(ClassType.OBSERVABLE, series.series_id)
                 print("from API: {}".format(observations))
             else:
                 observations = []
         else:
             observations = self.dbm.get_observable_list(series.series_id)
-            print("from DB: {}".format(observations))
         # create observable object and save on db
         observations_len = len(observations)
         number_obs = len(observations)

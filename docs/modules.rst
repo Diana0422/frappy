@@ -6,3 +6,5 @@ frappy
 
    frappy
    setup
+   study-case
+   test

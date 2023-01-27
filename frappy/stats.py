@@ -1,6 +1,6 @@
 import sys
 
-import __core as core
+from .__core import *
 import numpy as np
 
 
@@ -63,9 +63,9 @@ class Stats:
         self.titles_map = {}
         self.data_sets = []
         self.number_of_series = 0
-        self.dbm = core.DatabaseManager('frappy.db')
+        self.dbm = DatabaseManager('frappy.db')
 
-    def parse_to_dict(self, dataset_list: [[core.Observable]]) -> dict:
+    def parse_to_dict(self, dataset_list: [[Observable]]) -> dict:
         """
         add the specified dataset to the dictionary of series to study
         :param dataset_list: data added to the workflow
@@ -101,7 +101,7 @@ class Stats:
         """
         self.titles_map[index] = series_title
 
-    def add_dataset(self, dataset: [core.Observable]):
+    def add_dataset(self, dataset: [Observable]):
         """
         add a new dataset to the dictionary of datasets to study
         :param dataset: the dataset to be added

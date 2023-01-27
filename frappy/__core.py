@@ -1,12 +1,13 @@
+import sqlite3
+from sqlite3 import Error
+from .model import *
+from .api import *
+
+
 """
 This module is private and contains the definitions of classes and exceptions
 used in this package to interact with the FRED API.
 """
-import sqlite3
-from sqlite3 import Error
-from model import *
-from api import *
-
 __database_conf = {'tables': ['Category', 'Series', 'Observable'],
                    'attributes': {'Category': [('id', 'INTEGER PRIMARY KEY'),
                                                ('name', 'TEXT NOT NULL'),
