@@ -5,14 +5,14 @@ File needed to create package
 from setuptools import setup
 
 setup(
-    name='frappy',
+    name='source',
     version='0.1.0',
     description='A Python package to explore FRED API',
     url='https://github.com/Diana0422/frappy.git',
     author='Mattia Antonangeli, Diana Pasquali',
     author_email='mattiaantonangeli@gmail.com, diamerita@gmail.com',
     license='',
-    packages=['frappy'],
+    packages=['source'],
     install_requires=['pandas',
                       'numpy',
                       'plotly',

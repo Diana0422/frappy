@@ -1,7 +1,7 @@
 import json
 import sys
 
-from frappy.__core import DatabaseManager
+from source.__core import DatabaseManager
 from model import *
 import time
 import requests
@@ -83,7 +83,7 @@ class FredApiManager:
         :param start_category: the starting category from which to retrieve the tree of sub-categories
         :param on_api: a boolean that if True specifies whether the categories are to be retrieved
          from the api
-        :return:
+        :return: list of categories retrieved
         """
         nodes_to_visit = [start_category]
         ret_categories = []

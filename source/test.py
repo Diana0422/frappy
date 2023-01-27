@@ -1,9 +1,5 @@
-import sys
-from pprint import pprint
-
-from api import *
-from frappy import *
-from frappy.__core import DatabaseManager
+from source import *
+from source.__core import DatabaseManager
 
 if __name__ == '__main__':
 
@@ -54,7 +50,7 @@ if __name__ == '__main__':
     # INIZIO TEST stats.py
 
     print("time series")
-    graphs = Graphs(data_to_plot, "seaborn", "svg")
+    graphs = Graphs(data_to_plot, "plotly_dark", "svg")
     graphs.plot_series(True)
     graphs.plot_moving_average(5, False)
     graphs.plot_linear_regression()
