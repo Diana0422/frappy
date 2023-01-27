@@ -31,6 +31,7 @@ if __name__ == '__main__':
     t0 = time.time()
     index = 0
     array = series[0]
+    #sto prendendo TUTTE le osservabili da 16 serie relative a una categoria.
     for i in array:
         #obs.append([])
         if i.n_observables != 0:
