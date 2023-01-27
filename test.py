@@ -6,7 +6,7 @@ from frappy.model import Category
 
 if __name__ == '__main__':
 
-    f_api = FredApiManager("e5889c59144fa74e5235e15a0d1037ff")
+    f_api = FredApiManager("e5889c59144fa74e5235e15a0d1037ff", './frappy.db')
     # root = Category(0, "root", None, None, None, None)
     root = Category(154, "Missouri", None, None, None, None)
 

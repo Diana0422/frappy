@@ -14,12 +14,12 @@ class FredApiManager:
     class to interact with FRED api
     """
 
-    def __init__(self, api_key):
+    def __init__(self, api_key, db_path):
         self.key = api_key
         self.children_URL = "https://api.stlouisfed.org/fred/category/children?"
         self.series_URL = "https://api.stlouisfed.org/fred/category/series?"
         self.observable_URL = "https://api.stlouisfed.org/fred/series/observations?"
-        self.dbm = DatabaseManager('frappy.db')
+        self.dbm = DatabaseManager(db_path)
 
     def _generate_url(self, model_type, value) -> str:
         """
