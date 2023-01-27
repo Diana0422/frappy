@@ -63,7 +63,6 @@ class Stats:
     def __init__(self):
         self.data_dict = {}
         self.titles_map = {}
-        self.data_sets = []
         self.number_of_series = 0
         self.dbm = DatabaseManager('frappy.db')
 
@@ -103,26 +102,6 @@ class Stats:
         """
         self.titles_map[index] = series_title
 
-    def add_dataset(self, dataset: [Observable]):
-        """
-        add a new dataset to the dictionary of datasets to study
-        :param dataset: the dataset to be added
-        :return: None
-        """
-        self.data_sets.append(dataset)
-        index = self.data_sets.index(dataset)
-        self.parse_to_dict(dataset)
-
-    def delete_dataset(self, index):
-        """
-        delete a dataset from the workflow
-        :param index: the position of the dataset in the dictionary
-        :return: None
-        """
-        title = self.titles_map[index]
-        self.data_dict.pop(title)
-        self.number_of_series -= 1
-
     def covariance(self) -> dict:
         """
         calculate the covariance between the series in the workflow
@@ -139,6 +118,7 @@ class Stats:
             # check if there are multiple datasets
             if self.number_of_series > 1:
                 for index2 in range(index1, len(self.data_dict)):
+                    # calculate covariance only for series with same length
                     if len(self.data_dict[series_titles[index1]]) == len(self.data_dict[series_titles[index2]]):
                         if index2 == index1:
                             # same series: skip series
@@ -149,10 +129,10 @@ class Stats:
                             values2.append(data[1])
 
                         cov_mat = np.stack((values1, values2), axis=0)
-                        print(cov_mat)
+                        # print(cov_mat)
                         # calculate covariance of the series
                         covariance = np.cov(cov_mat)
-                        print(covariance)
+                        # print("covariance: {}".format(covariance))
                         ret_data[series_titles[index1] + "-" + series_titles[index2]] = covariance.tolist()
             else:
                 # TODO return error
