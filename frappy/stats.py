@@ -206,6 +206,7 @@ class Stats:
             window = 0
             values = []
             dataset = self.data_dict[series_titles[index]]
+            date_index = 0
 
             # check n
             print(len(dataset))
@@ -219,11 +220,15 @@ class Stats:
                 dataset = interpolate_data(dataset)
             for i in range(n):
                 window += dataset[i][1]
+                date_index += 1
 
-            values.append(window / n)
+            date = dataset[i][0]
+            values.append([date, window / n])
             for i in range(n, len(dataset)):
                 window = window + dataset[i][1] - dataset[i - n][1]
-                values.append(window / n)
+                date_index += 1
+                date = dataset[i][0]
+                values.append([date, window / n])
             ret_data[series_titles[index]] = values
         return ret_data
 
@@ -236,35 +241,44 @@ class Stats:
         series_titles = list(self.data_dict.keys())
 
         for index in range(0, len(self.data_dict)):
-            y = []
+            y_or = []
+            y_lr = []
             x = []
+            dates = []
             n = 0
             dataset = self.data_dict[series_titles[index]]
             for i in range(len(dataset)):
                 if dataset[i][1] is None:
                     continue
                 else:
-                    y.append(dataset[i][1])
+                    y_or.append(dataset[i][1])
                     n += 1
                     x.append(n)
+                    dates.append(dataset[i][0])
 
             # calculate linear regression parameters
             b1_num = 0
             b1_den = 0
 
-            y_arr = np.array(y)
+            y_arr = np.array(y_or)
             x_mean = sum(x) / len(x)
             y_mean = np.average(y_arr)
 
             for i in range(len(x)):
-                b1_num += ((x[i] - x_mean) * (y[i] - y_mean))
+                b1_num += ((x[i] - x_mean) * (y_or[i] - y_mean))
                 b1_den += ((x[i] - x_mean) ** 2)
 
             b1 = np.around((b1_num / b1_den), 5)
             b0 = np.around((y_mean - (b1 * x_mean)), 5)
 
             reg_line = "y = {} + {}β".format(b0, b1)
-            ret_data[series_titles[index]] = (b0, b1, reg_line, len(x), x, y)
+
+            for i in range(len(x)):
+                x_val = x[i]
+                y_lr_val = b0 + b1 * x_val
+                y_lr.append(y_lr_val)
+
+            ret_data[series_titles[index]] = (b0, b1, reg_line, len(x), x, y_or, y_lr, dates)
         return ret_data
 
     def __str__(self):

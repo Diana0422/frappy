@@ -4,6 +4,7 @@ from pprint import pprint
 from frappy.api import *
 from frappy import *
 from frappy.__core import DatabaseManager
+from frappy.graph import Graphs
 
 if __name__ == '__main__':
 

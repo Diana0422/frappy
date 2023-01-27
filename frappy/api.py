@@ -83,7 +83,7 @@ class FredApiManager:
         :param start_category: the starting category from which to retrieve the tree of sub-categories
         :param on_api: a boolean that if True specifies whether the categories are to be retrieved
          from the api
-        :return:
+        :return: list of categories retrieved
         """
         nodes_to_visit = [start_category]
         ret_categories = []
@@ -159,7 +159,7 @@ class FredApiManager:
         for s in series_list:
             if s['id'] is None:
                 continue
-            s = Series(s['id'], s['title'], category.cat_id, None)
+            s = Series(s['id'], s['title'], category.cat_id, s['n_observables'])
             category.series_list.append(s)
             series_len -= 1
             if on_api or not check:
@@ -191,6 +191,7 @@ class FredApiManager:
                 observations = []
         else:
             observations = self.dbm.get_observable_list(series.series_id)
+            # print("from DB: {}".format(observations))
         # create observable object and save on db
         observations_len = len(observations)
         number_obs = len(observations)
