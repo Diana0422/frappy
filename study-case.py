@@ -3,7 +3,7 @@ from pprint import pprint
 
 from api import *
 from frappy import *
-from frappy.__core import DatabaseManager
+from frappy.core import DatabaseManager
 
 if __name__ == '__main__':
 

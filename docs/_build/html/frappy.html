@@ -14,6 +14,7 @@
     <script src="_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="frappy" href="modules.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -39,13 +40,35 @@
 <span id="frappy-api-module"></span><h2>frappy.api module<a class="headerlink" href="#module-frappy.api" title="Permalink to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="frappy.api.FredApiManager">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">frappy.api.</span></span><span class="sig-name descname"><span class="pre">FredApiManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#frappy.api.FredApiManager" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">frappy.api.</span></span><span class="sig-name descname"><span class="pre">FredApiManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#frappy.api.FredApiManager" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>class to interact with FRED api</p>
 <dl class="py method">
+<dt class="sig sig-object py" id="frappy.api.FredApiManager._generate_request">
+<span class="sig-name descname"><span class="pre">_generate_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribute</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">[&lt;class</span> <span class="pre">'dict'&gt;]</span></span></span><a class="headerlink" href="#frappy.api.FredApiManager._generate_request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Private method to make a request to the FRED API
+:param model_type: type of the model class to retrieve
+:param attribute: attribute needed to make the request
+:return: array of dictionaries that represent the objects retrieved</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="frappy.api.FredApiManager._generate_url">
+<span class="sig-name descname"><span class="pre">_generate_url</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#frappy.api.FredApiManager._generate_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>private method to generate a specific URL to request to the FRED API
+:param model_type: type of model class to retrieve
+:param value: attribute needed to build the specific URL
+:return: URL string</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="frappy.api.FredApiManager.req_cat_start">
 <span class="sig-name descname"><span class="pre">req_cat_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_category</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#frappy.model.Category" title="frappy.model.Category"><span class="pre">Category</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">on_api</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#frappy.api.FredApiManager.req_cat_start" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>check if starting category is on database
+:param start_category:
+:param on_api:
+:return:</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="frappy.api.FredApiManager.request_categories">
@@ -58,7 +81,7 @@
 </div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p></p>
+<dd class="field-odd"><p>list of categories retrieved</p>
 </dd>
 </dl>
 </dd></dl>
@@ -86,13 +109,182 @@ from the api
 </dd></dl>
 
 </section>
+<section id="module-frappy.core">
+<span id="frappy-core-module"></span><h2>frappy.core module<a class="headerlink" href="#module-frappy.core" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="frappy.core.DatabaseManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">frappy.core.</span></span><span class="sig-name descname"><span class="pre">DatabaseManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#frappy.core.DatabaseManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This is a class to interact with the database of the package</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="frappy.core.DatabaseManager.check_in_database">
+<span class="sig-name descname"><span class="pre">check_in_database</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#frappy.model.ClassType" title="frappy.model.ClassType"><span class="pre">ClassType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribute</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#frappy.core.DatabaseManager.check_in_database" title="Permalink to this definition">¶</a></dt>
+<dd><p>checks if a certain instance with the given attributes is already present
+into the database. This is used to check if an object is to be retrieved from the FRED api
+or not (see more on documentation)
+:param model_type: the type of the object to check
+:param attribute: the attributes of the object
+:return: the number of elements present in the database. If 0, then the object is not present.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="frappy.core.DatabaseManager.close_db">
+<span class="sig-name descname"><span class="pre">close_db</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#frappy.core.DatabaseManager.close_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>procedure to close the database connection
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="frappy.core.DatabaseManager.commit">
+<span class="sig-name descname"><span class="pre">commit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#frappy.core.DatabaseManager.commit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="frappy.core.DatabaseManager.get_category">
+<span class="sig-name descname"><span class="pre">get_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">category_id</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#frappy.model.Category" title="frappy.model.Category"><span class="pre">Category</span></a></span></span><a class="headerlink" href="#frappy.core.DatabaseManager.get_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>retrieve a category with given id from the database
+:param category_id: the id of the category to fetch
+:return: Category object</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="frappy.core.DatabaseManager.get_category_list">
+<span class="sig-name descname"><span class="pre">get_category_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">[&lt;class</span> <span class="pre">'frappy.model.Category'&gt;]</span></span></span><a class="headerlink" href="#frappy.core.DatabaseManager.get_category_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>get a list of categories
+:return: list of Category</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="frappy.core.DatabaseManager.get_children_number">
+<span class="sig-name descname"><span class="pre">get_children_number</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">category_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#frappy.core.DatabaseManager.get_children_number" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the number of children of a given category
+:param category_id:
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="frappy.core.DatabaseManager.get_observable_list">
+<span class="sig-name descname"><span class="pre">get_observable_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">series_id</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">[&lt;class</span> <span class="pre">'frappy.model.Observable'&gt;]</span></span></span><a class="headerlink" href="#frappy.core.DatabaseManager.get_observable_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>get a list of observables of a given series
+:param series_id: the given series
+:return: list of Observable</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="frappy.core.DatabaseManager.get_observables_number">
+<span class="sig-name descname"><span class="pre">get_observables_number</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">category_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#frappy.core.DatabaseManager.get_observables_number" title="Permalink to this definition">¶</a></dt>
+<dd><p>get number of series of a given category
+:param category_id: the given category
+:return: number of Series integer</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="frappy.core.DatabaseManager.get_series">
+<span class="sig-name descname"><span class="pre">get_series</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">series_id</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#frappy.model.Series" title="frappy.model.Series"><span class="pre">Series</span></a></span></span><a class="headerlink" href="#frappy.core.DatabaseManager.get_series" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the series with the specified id in the database
+:param series_id: series id
+:return: a Series object</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="frappy.core.DatabaseManager.get_series_list">
+<span class="sig-name descname"><span class="pre">get_series_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">category_id</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">[&lt;class</span> <span class="pre">'frappy.model.Series'&gt;]</span></span></span><a class="headerlink" href="#frappy.core.DatabaseManager.get_series_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>get a list of series of a given category
+:param category_id: the given category
+:return: list of Series</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="frappy.core.DatabaseManager.get_series_number">
+<span class="sig-name descname"><span class="pre">get_series_number</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">category_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#frappy.core.DatabaseManager.get_series_number" title="Permalink to this definition">¶</a></dt>
+<dd><p>get number of series of a given category
+:param category_id: the given category
+:return: number of Series integer</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="frappy.core.DatabaseManager.get_subcategories">
+<span class="sig-name descname"><span class="pre">get_subcategories</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">category_id</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">[&lt;class</span> <span class="pre">'frappy.model.Category'&gt;]</span></span></span><a class="headerlink" href="#frappy.core.DatabaseManager.get_subcategories" title="Permalink to this definition">¶</a></dt>
+<dd><p>get a list of children for the given category
+:param category_id: the id of the category whose children are to be retrieved
+:return: list of Category type children</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="frappy.core.DatabaseManager.insert_category">
+<span class="sig-name descname"><span class="pre">insert_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">category</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#frappy.model.Category" title="frappy.model.Category"><span class="pre">Category</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#frappy.core.DatabaseManager.insert_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>insert a new Category in the database
+:param category: the category to insert
+:return: None</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="frappy.core.DatabaseManager.insert_observable">
+<span class="sig-name descname"><span class="pre">insert_observable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">observable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#frappy.model.Observable" title="frappy.model.Observable"><span class="pre">Observable</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">commit_flag</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#frappy.core.DatabaseManager.insert_observable" title="Permalink to this definition">¶</a></dt>
+<dd><p>insert a new Observable object in the database
+:param observable: the observable to insert
+:return: None</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="frappy.core.DatabaseManager.insert_series">
+<span class="sig-name descname"><span class="pre">insert_series</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">series</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#frappy.model.Series" title="frappy.model.Series"><span class="pre">Series</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">commit_flag</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#frappy.core.DatabaseManager.insert_series" title="Permalink to this definition">¶</a></dt>
+<dd><p>insert a new Series object in the database
+:param commit_flag:
+:param series: the series to insert
+:return: None</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="frappy.core.DatabaseManager.update_category">
+<span class="sig-name descname"><span class="pre">update_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">category</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#frappy.model.Category" title="frappy.model.Category"><span class="pre">Category</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#frappy.core.DatabaseManager.update_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>update the category specified in the database
+:param category: the new state of the Category
+:return: None</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="frappy.core.DatabaseManager.update_observable">
+<span class="sig-name descname"><span class="pre">update_observable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">observable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#frappy.model.Observable" title="frappy.model.Observable"><span class="pre">Observable</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#frappy.core.DatabaseManager.update_observable" title="Permalink to this definition">¶</a></dt>
+<dd><p>update the observable specified in the database
+:param observable: the new state of the Observable
+:return: None</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="frappy.core.DatabaseManager.update_series">
+<span class="sig-name descname"><span class="pre">update_series</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">series</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#frappy.model.Series" title="frappy.model.Series"><span class="pre">Series</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#frappy.core.DatabaseManager.update_series" title="Permalink to this definition">¶</a></dt>
+<dd><p>update the series specified in the database
+:param series: the new state of the Series
+:return: None</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="frappy.core._read_creation_conf">
+<span class="sig-prename descclassname"><span class="pre">frappy.core.</span></span><span class="sig-name descname"><span class="pre">_read_creation_conf</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#frappy.core._read_creation_conf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the database configuration entries to build a
+database query
+:return: a database query</p>
+</dd></dl>
+
+</section>
 <section id="module-frappy.graph">
 <span id="frappy-graph-module"></span><h2>frappy.graph module<a class="headerlink" href="#module-frappy.graph" title="Permalink to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="frappy.graph.Graphs">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">frappy.graph.</span></span><span class="sig-name descname"><span class="pre">Graphs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#frappy.graph.Graphs" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">frappy.graph.</span></span><span class="sig-name descname"><span class="pre">Graphs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph_theme</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#frappy.graph.Graphs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>class to plot data</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="frappy.graph.Graphs._save_graph_to_file">
+<span class="sig-name descname"><span class="pre">_save_graph_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">figure</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Figure</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#frappy.graph.Graphs._save_graph_to_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>saves the input graph to a file of a certain filetype
+:param figure: plot to save
+:return: None</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="frappy.graph.Graphs.plot_linear_regression">
 <span class="sig-name descname"><span class="pre">plot_linear_regression</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#frappy.graph.Graphs.plot_linear_regression" title="Permalink to this definition">¶</a></dt>
@@ -109,7 +301,7 @@ from the api
 
 <dl class="py method">
 <dt class="sig sig-object py" id="frappy.graph.Graphs.plot_series">
-<span class="sig-name descname"><span class="pre">plot_series</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#frappy.graph.Graphs.plot_series" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">plot_series</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interpolate</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#frappy.graph.Graphs.plot_series" title="Permalink to this definition">¶</a></dt>
 <dd><p>plot a time series
 :return: figure</p>
 </dd></dl>
@@ -119,6 +311,15 @@ from the api
 <span class="sig-name descname"><span class="pre">prepare_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#frappy.graph.Graphs.prepare_data" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="frappy.graph.set_graph_layout">
+<span class="sig-prename descclassname"><span class="pre">frappy.graph.</span></span><span class="sig-name descname"><span class="pre">set_graph_layout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">figure</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Figure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#frappy.graph.set_graph_layout" title="Permalink to this definition">¶</a></dt>
+<dd><p>changes the layout of the specified figure
+:param figure:
+:param template:
+:return: None</p>
 </dd></dl>
 
 </section>
@@ -186,6 +387,15 @@ from the api
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">frappy.stats.</span></span><span class="sig-name descname"><span class="pre">Stats</span></span><a class="headerlink" href="#frappy.stats.Stats" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>a class that implements some statistic methods to work with FRED data</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="frappy.stats.Stats._map_position">
+<span class="sig-name descname"><span class="pre">_map_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">series_title</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#frappy.stats.Stats._map_position" title="Permalink to this definition">¶</a></dt>
+<dd><p>map the position of the series data in the dictionary with the title of the series
+:param index: position
+:param series_title: title of the series
+:return: None</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="frappy.stats.Stats.add_dataset">
 <span class="sig-name descname"><span class="pre">add_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">dataset:</span> <span class="pre">[&lt;class</span> <span class="pre">'frappy.model.Observable'&gt;]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#frappy.stats.Stats.add_dataset" title="Permalink to this definition">¶</a></dt>
@@ -280,11 +490,21 @@ from the api
 
 
 <h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">frappy</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">frappy package</a></li>
+</ul>
+</li>
+</ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">frappy</a><ul>
+      <li>Previous: <a href="modules.html" title="previous chapter">frappy</a></li>
+  </ul></li>
   </ul></li>
 </ul>
 </div>

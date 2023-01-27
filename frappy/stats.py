@@ -1,6 +1,6 @@
 import sys
 
-from .__core import *
+from .core import *
 import numpy as np
 
 from .model import Observable

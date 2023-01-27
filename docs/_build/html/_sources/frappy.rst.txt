@@ -1,0 +1,53 @@
+frappy package
+==============
+
+Submodules
+----------
+
+frappy.api module
+-----------------
+
+.. automodule:: frappy.api
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+frappy.core module
+------------------
+
+.. automodule:: frappy.core
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+frappy.graph module
+-------------------
+
+.. automodule:: frappy.graph
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+frappy.model module
+-------------------
+
+.. automodule:: frappy.model
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+frappy.stats module
+-------------------
+
+.. automodule:: frappy.stats
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: frappy
+   :members:
+   :undoc-members:
+   :show-inheritance:

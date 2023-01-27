@@ -5,6 +5,3 @@ frappy
    :maxdepth: 4
 
    frappy
-   setup
-   study-case
-   test

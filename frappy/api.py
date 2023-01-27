@@ -4,8 +4,7 @@ import time
 
 import requests
 
-from .__core import *
-from .__core import DatabaseManager
+from .core import DatabaseManager
 from .model import ClassType, Category, object_convert, Series, Observable
 
 
@@ -71,7 +70,12 @@ class FredApiManager:
         return ret_objects
 
     def req_cat_start(self, start_category: Category, on_api):
-        # check if starting category is on database
+        """
+        check if starting category is on database
+        :param start_category:
+        :param on_api:
+        :return:
+        """
         check = self.dbm.check_in_database(ClassType.CATEGORY, start_category.cat_id)
         if not check:
             self.dbm.insert_category(start_category)

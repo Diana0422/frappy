@@ -14,6 +14,8 @@
     <script src="_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="frappy package" href="frappy.html" />
+    <link rel="prev" title="Welcome to Frappy’s documentation!" href="index.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -38,6 +40,8 @@
 <li class="toctree-l2"><a class="reference internal" href="frappy.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="frappy.html#module-frappy.api">frappy.api module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="frappy.html#frappy.api.FredApiManager"><code class="docutils literal notranslate"><span class="pre">FredApiManager</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="frappy.html#frappy.api.FredApiManager._generate_request"><code class="docutils literal notranslate"><span class="pre">FredApiManager._generate_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="frappy.html#frappy.api.FredApiManager._generate_url"><code class="docutils literal notranslate"><span class="pre">FredApiManager._generate_url()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="frappy.html#frappy.api.FredApiManager.req_cat_start"><code class="docutils literal notranslate"><span class="pre">FredApiManager.req_cat_start()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="frappy.html#frappy.api.FredApiManager.request_categories"><code class="docutils literal notranslate"><span class="pre">FredApiManager.request_categories()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="frappy.html#frappy.api.FredApiManager.request_observables"><code class="docutils literal notranslate"><span class="pre">FredApiManager.request_observables()</span></code></a></li>
@@ -46,14 +50,41 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="frappy.html#module-frappy.core">frappy.core module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="frappy.html#frappy.core.DatabaseManager"><code class="docutils literal notranslate"><span class="pre">DatabaseManager</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="frappy.html#frappy.core.DatabaseManager.check_in_database"><code class="docutils literal notranslate"><span class="pre">DatabaseManager.check_in_database()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="frappy.html#frappy.core.DatabaseManager.close_db"><code class="docutils literal notranslate"><span class="pre">DatabaseManager.close_db()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="frappy.html#frappy.core.DatabaseManager.commit"><code class="docutils literal notranslate"><span class="pre">DatabaseManager.commit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="frappy.html#frappy.core.DatabaseManager.get_category"><code class="docutils literal notranslate"><span class="pre">DatabaseManager.get_category()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="frappy.html#frappy.core.DatabaseManager.get_category_list"><code class="docutils literal notranslate"><span class="pre">DatabaseManager.get_category_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="frappy.html#frappy.core.DatabaseManager.get_children_number"><code class="docutils literal notranslate"><span class="pre">DatabaseManager.get_children_number()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="frappy.html#frappy.core.DatabaseManager.get_observable_list"><code class="docutils literal notranslate"><span class="pre">DatabaseManager.get_observable_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="frappy.html#frappy.core.DatabaseManager.get_observables_number"><code class="docutils literal notranslate"><span class="pre">DatabaseManager.get_observables_number()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="frappy.html#frappy.core.DatabaseManager.get_series"><code class="docutils literal notranslate"><span class="pre">DatabaseManager.get_series()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="frappy.html#frappy.core.DatabaseManager.get_series_list"><code class="docutils literal notranslate"><span class="pre">DatabaseManager.get_series_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="frappy.html#frappy.core.DatabaseManager.get_series_number"><code class="docutils literal notranslate"><span class="pre">DatabaseManager.get_series_number()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="frappy.html#frappy.core.DatabaseManager.get_subcategories"><code class="docutils literal notranslate"><span class="pre">DatabaseManager.get_subcategories()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="frappy.html#frappy.core.DatabaseManager.insert_category"><code class="docutils literal notranslate"><span class="pre">DatabaseManager.insert_category()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="frappy.html#frappy.core.DatabaseManager.insert_observable"><code class="docutils literal notranslate"><span class="pre">DatabaseManager.insert_observable()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="frappy.html#frappy.core.DatabaseManager.insert_series"><code class="docutils literal notranslate"><span class="pre">DatabaseManager.insert_series()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="frappy.html#frappy.core.DatabaseManager.update_category"><code class="docutils literal notranslate"><span class="pre">DatabaseManager.update_category()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="frappy.html#frappy.core.DatabaseManager.update_observable"><code class="docutils literal notranslate"><span class="pre">DatabaseManager.update_observable()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="frappy.html#frappy.core.DatabaseManager.update_series"><code class="docutils literal notranslate"><span class="pre">DatabaseManager.update_series()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="frappy.html#frappy.core._read_creation_conf"><code class="docutils literal notranslate"><span class="pre">_read_creation_conf()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="frappy.html#module-frappy.graph">frappy.graph module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="frappy.html#frappy.graph.Graphs"><code class="docutils literal notranslate"><span class="pre">Graphs</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="frappy.html#frappy.graph.Graphs._save_graph_to_file"><code class="docutils literal notranslate"><span class="pre">Graphs._save_graph_to_file()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="frappy.html#frappy.graph.Graphs.plot_linear_regression"><code class="docutils literal notranslate"><span class="pre">Graphs.plot_linear_regression()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="frappy.html#frappy.graph.Graphs.plot_moving_average"><code class="docutils literal notranslate"><span class="pre">Graphs.plot_moving_average()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="frappy.html#frappy.graph.Graphs.plot_series"><code class="docutils literal notranslate"><span class="pre">Graphs.plot_series()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="frappy.html#frappy.graph.Graphs.prepare_data"><code class="docutils literal notranslate"><span class="pre">Graphs.prepare_data()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="frappy.html#frappy.graph.set_graph_layout"><code class="docutils literal notranslate"><span class="pre">set_graph_layout()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="frappy.html#module-frappy.model">frappy.model module</a><ul>
@@ -72,6 +103,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="frappy.html#module-frappy.stats">frappy.stats module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="frappy.html#frappy.stats.Stats"><code class="docutils literal notranslate"><span class="pre">Stats</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="frappy.html#frappy.stats.Stats._map_position"><code class="docutils literal notranslate"><span class="pre">Stats._map_position()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="frappy.html#frappy.stats.Stats.add_dataset"><code class="docutils literal notranslate"><span class="pre">Stats.add_dataset()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="frappy.html#frappy.stats.Stats.covariance"><code class="docutils literal notranslate"><span class="pre">Stats.covariance()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="frappy.html#frappy.stats.Stats.delete_dataset"><code class="docutils literal notranslate"><span class="pre">Stats.delete_dataset()</span></code></a></li>
@@ -88,9 +120,6 @@
 <li class="toctree-l2"><a class="reference internal" href="frappy.html#module-frappy">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="setup.html">setup module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="study-case.html">study-case module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="test.html">test module</a></li>
 </ul>
 </div>
 </section>
@@ -112,11 +141,20 @@
 
 
 <h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">frappy</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="frappy.html">frappy package</a></li>
+</ul>
+</li>
+</ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to Frappy’s documentation!</a></li>
+      <li>Next: <a href="frappy.html" title="next chapter">frappy package</a></li>
   </ul></li>
 </ul>
 </div>
