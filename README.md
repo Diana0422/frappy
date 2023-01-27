@@ -1,9 +1,6 @@
 # Frappy
 A wrapper for FRED, St. Louis Federal Reserve Bank
 
-### Docs
-For api documentation visit the following page: https://www.fredlib.software/
-
 ### Installation guide
 
 1. Clone this repository in local filesystem using  
@@ -26,3 +23,7 @@ instead of
 ```
 pip install .
 ```
+
+### Docs
+
+You can find documentation of this project in the /docs folder.
