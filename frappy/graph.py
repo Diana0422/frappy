@@ -107,6 +107,7 @@ class Graphs:
         x = 0
         for index in range(0, len(self.data_to_plot)):
             dataset = self.data_to_plot[series_titles[index]]
+            print(dataset)
             df = pd.DataFrame(dataset, columns=["Date", "Value"])
             data = go.Scatter(x=df['Date'], y=df['Value'], name=series_titles[index])
             fig.add_traces([data])
@@ -114,6 +115,54 @@ class Graphs:
         # save plot image on file
         self._save_graph_to_file(fig)
         return fig
+
+    def plot_prime_differences(self):
+        """
+        plot the prime differences of the series specified
+        :return: figure
+        """
+        # calculate the prime differences
+        self.data_to_plot = self.stats.prime_differences()
+
+        # plot the result
+        layout = dict(xaxis=dict(title="Date"), yaxis=dict(title="Value"), title="Series Prime Differences")
+        fig = go.Figure(layout=layout)
+        series_titles = list(self.data_to_plot.keys())
+        x = 0
+        for index in range(0, len(self.data_to_plot)):
+            dataset = self.data_to_plot[series_titles[index]]
+            print(dataset)
+            df = pd.DataFrame(dataset, columns=["Date", "Value"])
+            data = go.Scatter(x=df['Date'], y=df['Value'], name=series_titles[index])
+            fig.add_traces([data])
+            x += 1
+        # save plot image on file
+        self._save_graph_to_file(fig)
+        return fig
+
+    def plot_prime_differences_percent(self):
+        """
+        plot the prime differences of the series specified
+        :return: figure
+        """
+        # calculate the prime difference percentage
+        self.data_to_plot = self.stats.percent_prime_differences()
+
+        # plot the result
+        layout = dict(xaxis=dict(title="Date"), yaxis=dict(title="Value"), title="Series Percent Prime Differences")
+        fig = go.Figure(layout=layout)
+        series_titles = list(self.data_to_plot.keys())
+        x = 0
+        for index in range(0, len(self.data_to_plot)):
+            dataset = self.data_to_plot[series_titles[index]]
+            df = pd.DataFrame(dataset, columns=["Date", "Value"])
+            data = go.Scatter(x=df['Date'], y=df['Value'], name=series_titles[index])
+            fig.add_traces([data])
+            x += 1
+        # save plot image on file
+        self._save_graph_to_file(fig)
+        return fig
+
 
     def plot_linear_regression(self):
         """

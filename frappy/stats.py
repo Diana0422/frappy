@@ -171,7 +171,7 @@ class Stats:
             dataset = interpolate_data(self.data_dict[series_titles[index]])
             for i in range(len(dataset) - 1):
                 diff = dataset[i + 1][1] - dataset[i][1]
-                diffs.append(diff)
+                diffs.append([dataset[i][0], diff])  # [data, value_diff]
             ret_data[series_titles[index]] = diffs
         return ret_data
 
@@ -185,12 +185,13 @@ class Stats:
         for index in range(len(self.data_dict)):
             diffs = []
             dataset = interpolate_data(self.data_dict[series_titles[index]])
-            for i in range(len(dataset)):
+            print(dataset)
+            for i in range(len(dataset)-1):
                 try:
                     diff = (dataset[i + 1][1] - dataset[i][1]) / dataset[i][1]
                 except ZeroDivisionError:
                     diff = None
-                diffs.append(diff)
+                diffs.append([dataset[i][0], diff])
             ret_data[series_titles[index]] = diffs
         return ret_data
 
