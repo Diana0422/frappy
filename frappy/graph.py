@@ -1,8 +1,18 @@
-from frappy.stats import interpolate_data
+import frappy.stats as st
 import pandas as pd
 import plotly.graph_objects as go
 import plotly.express as px
 import plotly.io as io
+
+
+def set_graph_layout(figure: go.Figure, template):
+    """
+    changes the layout of the specified figure
+    :param figure:
+    :param template:
+    :return: None
+    """
+    figure.update_layout(template=template)
 
 
 class Graphs:
@@ -10,62 +20,132 @@ class Graphs:
     class to plot data
     """
 
-    def __init__(self, data_to_plot):
-        self.data_to_plot = data_to_plot
-        self.fig = go.Figure()
+    def __init__(self, data, graph_theme, file_type):
+        self.data_original = data
+        self.data_to_plot = {}
+        self.stats = st.Stats()
+        self.template = graph_theme
+        self.file_type = file_type
 
-    def plot_series(self):
+    def prepare_data(self, data_dict):
+        total = {}
+        index = 0
+
+        for dataset in data_dict:
+            data_buffer = []
+            for data in dataset:
+                print(data)
+                try:
+                    value = float(data.value)
+                except ValueError:
+                    value = None
+                data_buffer.append([data.date, value])
+            total[data.series] = data_buffer
+            index += 1
+        self.data_original = total
+        print(total)
+
+    def _save_graph_to_file(self, figure: go.Figure):
+        """
+        saves the input graph to a file of a certain filetype
+        :param figure: plot to save
+        :return: None
+        """
+        set_graph_layout(figure, self.template)
+        if self.file_type == "svg":
+            figure.write_image("{}.svg".format(figure.layout.title.text))
+        elif self.file_type == "png":
+            figure.write_image("{}.png".format(figure.layout.title.text))
+        elif self.file_type == "jpg":
+            figure.write_image("{}.jpg".format(figure.layout.title.text))
+        elif self.file_type == "bmp":
+            figure.write_image("{}.bmp".format(figure.layout.title.text))
+        else:
+            # default: html
+            figure.write_html("{}.html".format(figure.layout.title.text))
+
+    def plot_series(self, interpolate):
         """
         plot a time series
         :return: figure
         """
+        # just plot the series observables
+        data = self.data_original.copy()
+        self.data_to_plot = self.stats.parse_to_dict(data)
+
         # check if there are multiple datasets to plot
+        layout = dict(xaxis=dict(title="Date"), yaxis=dict(title="Value"), title="Series Over Time")
+        fig = go.Figure(layout=layout)
         series_titles = list(self.data_to_plot.keys())
 
         for index in range(0, len(self.data_to_plot)):
             dataset = self.data_to_plot[series_titles[index]]
-            inter_dataset = interpolate_data(dataset)
+            if interpolate:
+                inter_dataset = st.interpolate_data(dataset)
+            else:
+                inter_dataset = dataset.copy()
             inter_dataset.sort()
             df = pd.DataFrame(inter_dataset, columns=["Date", "Value"])
-            self.fig.add_traces([go.Scatter(x=df['Date'], y=df['Value'], name=series_titles[index])])
-            # save plot image on file
-        io.write_image(fig=self.fig, file='series_plot.png', format="png")
-        return self.fig
+            data = go.Scatter(x=df['Date'], y=df['Value'], name=series_titles[index])
+            fig.add_traces([data])
+        # save plot image on file
+        self._save_graph_to_file(fig)
+        return fig
 
-    def plot_moving_average(self):
+    def plot_moving_average(self, step, interpolate):
         """
         plot the moving average of the series
         :return: figure
         """
+        # calculate the moving avg
+        self.data_to_plot = self.stats.moving_average(step, interpolate)
+
+        # plot the results
+        layout = dict(xaxis=dict(title="Date"), yaxis=dict(title="Value"), title="Series Moving Average")
+        fig = go.Figure(layout=layout)
         series_titles = list(self.data_to_plot.keys())
         x = 0
         for index in range(0, len(self.data_to_plot)):
-            array = []
             dataset = self.data_to_plot[series_titles[index]]
-            for x in range(1, len(dataset) + 1):
-                array.append(x)
-            df = pd.DataFrame(dataset, columns=["Value"])
-            self.fig.add_traces([go.Scatter(x=array, y=df['Value'], name=series_titles[index])])
+            df = pd.DataFrame(dataset, columns=["Date", "Value"])
+            data = go.Scatter(x=df['Date'], y=df['Value'], name=series_titles[index])
+            fig.add_traces([data])
             x += 1
-        io.write_image(fig=self.fig, file='moving_avg_plot.png', format="png")
-        return self.fig
+        # save plot image on file
+        self._save_graph_to_file(fig)
+        return fig
 
     def plot_linear_regression(self):
         """
         plot the linear regression of the series specified
         :return: figure
         """
+        # calculate the linear regression
+        self.data_to_plot = self.stats.linear_regression()
+
+        # plot the result
+        layout = dict(xaxis=dict(title="Date"), yaxis=dict(title="Value"), title="Series Linear Regression")
+        fig = go.Figure(layout=layout)
         series_titles = list(self.data_to_plot.keys())
         colors = px.colors.qualitative.Plotly
         for index in range(0, len(self.data_to_plot)):
             dataset = self.data_to_plot[series_titles[index]]
-            # df = pd.DataFrame(dataset, columns=["Value"])
-            x = [1, dataset[3]]
-            y = [dataset[0], dataset[0] + dataset[1] * dataset[3]]
-            self.fig.add_traces(
-                [go.Scatter(x=x, y=y, name="LR-" + series_titles[index], marker=dict(color=colors[index]))])
-            self.fig.add_traces([go.Scatter(x=dataset[4], y=dataset[5], name=series_titles[index],
-                                            marker=dict(color=colors[index], size=1), opacity=0.3)])
-        io.write_image(fig=self.fig, file='linear_regression_plot.png', format="png")
-        return self.fig
-
+            data_table_lr = []
+            data_table_or = []
+            for i in range(len(dataset[6])):
+                date = dataset[7][i]
+                lr_value = dataset[6][i]
+                or_value = dataset[5][i]
+                data_table_lr.append([date, lr_value])
+                data_table_or.append([date, or_value])
+            df_lr = pd.DataFrame(data_table_lr, columns=["Date", "Value"])
+            df_or = pd.DataFrame(data_table_or, columns=["Date", "Value"])
+            data_lr = go.Scatter(x=df_lr['Date'], y=df_lr['Value'], name="LR-" + series_titles[index],
+                                 marker=dict(color=colors[index]))
+            data_or = go.Scatter(x=df_or['Date'], y=df_or['Value'], name=series_titles[index],
+                                 marker=dict(color=colors[index], size=1), opacity=0.3)
+            fig.add_traces([data_lr])
+            fig.add_traces([data_or])
+        # save plot image on file
+        self._save_graph_to_file(fig)
+        return fig
