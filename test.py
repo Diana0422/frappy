@@ -53,8 +53,10 @@ if __name__ == '__main__':
     # INIZIO TEST stats.py
 
     print("time series")
+
     graphs = Graphs(data_to_plot, "ggplot2", "png")
     graphs.plot_series(True)
+    graphs.print_covariance()
     graphs.plot_moving_average(5, False)
     graphs.plot_prime_differences()
     graphs.plot_prime_differences_percent()

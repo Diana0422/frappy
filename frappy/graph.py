@@ -64,6 +64,14 @@ class Graphs:
             # default: html
             figure.write_html("{}.html".format(figure.layout.title.text))
 
+    def print_covariance(self):
+        """
+        calculates covariance and prints it on screen
+        :return: None
+        """
+        cov = self.stats.covariance()
+        print("covariance: {}".format(cov))
+
     def plot_series(self, interpolate):
         """
         plot a time series
