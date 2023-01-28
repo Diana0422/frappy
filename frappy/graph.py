@@ -7,17 +7,17 @@ import plotly.io as io
 
 def set_graph_layout(figure: go.Figure, template):
     """
-    changes the layout of the specified figure
-    :param figure:
-    :param template:
-    :return: None
+    changes the layout of the specified figure\n
+    :param figure:\n
+    :param template:\n
+    :return: None\n
     """
     figure.update_layout(template=template)
 
 
 class Graphs:
     """
-    class to plot data
+    class to plot data\n
     """
 
     def __init__(self, data, graph_theme, file_type):
@@ -28,13 +28,17 @@ class Graphs:
         self.file_type = file_type
 
     def prepare_data(self, data_dict):
+        """
+        prepare and import in Graphs instance original data to be used in Graphs methods\n
+        :param data_dict: data to prepare\n
+        :return: None\n
+        """
         total = {}
         index = 0
 
         for dataset in data_dict:
             data_buffer = []
             for data in dataset:
-                print(data)
                 try:
                     value = float(data.value)
                 except ValueError:
@@ -43,13 +47,12 @@ class Graphs:
             total[data.series] = data_buffer
             index += 1
         self.data_original = total
-        print(total)
 
     def _save_graph_to_file(self, figure: go.Figure):
         """
-        saves the input graph to a file of a certain filetype
-        :param figure: plot to save
-        :return: None
+        saves the input graph to a file of a certain filetype\n
+        :param figure: plot to save\n
+        :return: None\n
         """
         set_graph_layout(figure, self.template)
         if self.file_type == "svg":
@@ -66,16 +69,16 @@ class Graphs:
 
     def print_covariance(self):
         """
-        calculates covariance and prints it on screen
-        :return: None
+        calculates covariance and prints it on screen\n
+        :return: None\n
         """
         cov = self.stats.covariance()
         print("covariance: {}".format(cov))
 
     def plot_series(self, interpolate):
         """
-        plot a time series
-        :return: figure
+        plot a time series\n
+        :return: figure\n
         """
         # just plot the series observables
         data = self.data_original.copy()
@@ -102,8 +105,8 @@ class Graphs:
 
     def plot_moving_average(self, step, interpolate):
         """
-        plot the moving average of the series
-        :return: figure
+        plot the moving average of the series\n
+        :return: figure\n
         """
         # calculate the moving avg
         self.data_to_plot = self.stats.moving_average(step, interpolate)
@@ -126,8 +129,8 @@ class Graphs:
 
     def plot_prime_differences(self):
         """
-        plot the prime differences of the series specified
-        :return: figure
+        plot the prime differences of the series specified\n
+        :return: figure\n
         """
         # calculate the prime differences
         self.data_to_plot = self.stats.prime_differences()
@@ -150,8 +153,8 @@ class Graphs:
 
     def plot_prime_differences_percent(self):
         """
-        plot the prime differences of the series specified
-        :return: figure
+        plot the prime differences of the series specified\n
+        :return: figure\n
         """
         # calculate the prime difference percentage
         self.data_to_plot = self.stats.percent_prime_differences()
@@ -174,8 +177,8 @@ class Graphs:
 
     def plot_linear_regression(self):
         """
-        plot the linear regression of the series specified
-        :return: figure
+        plot the linear regression of the series specified\n
+        :return: figure\n
         """
         # calculate the linear regression
         self.data_to_plot = self.stats.linear_regression()

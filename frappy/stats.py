@@ -8,9 +8,9 @@ from .model import Observable
 
 def interpolate_data(data_buffer: [[str, float]]) -> [[str, float]]:
     """
-    Interpolate data when NaN
-    :param data_buffer: list of data lists
-    :return:
+    Interpolate data when NaN(s) occurs\n
+    :param data_buffer: list of data lists\n
+    :return: interpolated data\n
     """
     i = 0
     si = []
@@ -57,7 +57,7 @@ def interpolate_data(data_buffer: [[str, float]]) -> [[str, float]]:
 
 class Stats:
     """
-    a class that implements some statistic methods to work with FRED data
+    a class that implements some statistic methods to work with FRED data\n
     """
 
     def __init__(self):
@@ -68,9 +68,9 @@ class Stats:
 
     def parse_to_dict(self, dataset_list: [[Observable]]) -> dict:
         """
-        add the specified dataset to the dictionary of series to study
-        :param dataset_list: data added to the workflow
-        :return: None
+        add the specified dataset to the dictionary of series to study\n
+        :param dataset_list: data added to the workflow\n
+        :return: None\n
         """
         total = {}
         index = 0
@@ -95,17 +95,17 @@ class Stats:
 
     def _map_position(self, index, series_title):
         """
-        map the position of the series data in the dictionary with the title of the series
-        :param index: position
-        :param series_title: title of the series
-        :return: None
+        map the position of the series data in the dictionary with the title of the series\n
+        :param index: position\n
+        :param series_title: title of the series\n
+        :return: None\n
         """
         self.titles_map[index] = series_title
 
     def covariance(self) -> dict:
         """
-        calculate the covariance between the series in the workflow
-        :return: dictionary with the variance-covariance matrix
+        calculate the covariance between the series in the workflow\n
+        :return: dictionary with the variance-covariance matrix\n
         """
         ret_data = {}
         series_titles = list(self.data_dict.keys())
@@ -141,8 +141,8 @@ class Stats:
 
     def prime_differences(self) -> dict:
         """
-        calculate the prime differences of the series in the workflow
-        :return: dictionary with the prime differences results
+        calculate the prime differences of the series in the workflow\n
+        :return: dictionary with the prime differences results\n
         """
         ret_data = {}
         series_titles = list(self.data_dict.keys())
@@ -157,8 +157,8 @@ class Stats:
 
     def percent_prime_differences(self) -> dict:
         """
-        calculate the percentual prime differences of the series in the workflow
-        :return: dictionary with the percentual prime differences results
+        calculate the percentual prime differences of the series in the workflow\n
+        :return: dictionary with the percentual prime differences results\n
         """
         ret_data = {}
         series_titles = list(self.data_dict.keys())
@@ -177,10 +177,10 @@ class Stats:
 
     def moving_average(self, n, interpolate) -> dict:
         """
-        calculate the moving average of the series in the workflow
-        :param n: window size
-        :param interpolate: boolean to set the interpolation of NaN data
-        :return: dictionary with the moving average of the series in the workflow
+        calculate the moving average of the series in the workflow\n
+        :param n: window size\n
+        :param interpolate: boolean to set the interpolation of NaN data\n
+        :return: dictionary with the moving average of the series in the workflow\n
         """
         ret_data = {}
         series_titles = list(self.data_dict.keys())
@@ -217,8 +217,8 @@ class Stats:
 
     def linear_regression(self) -> dict:
         """
-        calculate the linear regression of the series in the workflow
-        :return: dictionary with the linear regression parameters calculated
+        calculate the linear regression of the series in the workflow\n
+        :return: dictionary with the linear regression parameters calculated\n
         """
         ret_data = {}
         series_titles = list(self.data_dict.keys())

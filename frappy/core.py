@@ -32,8 +32,7 @@ __database_conf = {'tables': ['Category', 'Series', 'Observable'],
 
 def _read_creation_conf() -> str:
     """
-    Reads the database configuration entries to build a
-    database query
+    Reads the database configuration entries to build a database query\n
     :return: a database query
     """
     tables = __database_conf['tables']
@@ -56,7 +55,7 @@ def _read_creation_conf() -> str:
 
 class DatabaseManager:
     """
-    This is a class to interact with the database of the package
+    This is a class to interact with the database of the package\n
     """
 
     def __init__(self, db_name: str):
@@ -76,13 +75,17 @@ class DatabaseManager:
                 self.conn.commit()
 
     def commit(self):
+        """
+        force connection commit
+        :return: None\n
+        """
         self.conn.commit()
 
     def insert_category(self, category: Category):
         """
-        insert a new Category in the database
-        :param category: the category to insert
-        :return: None
+        insert a new Category in the database\n
+        :param category: the category to insert\n
+        :return: None\n
         """
         insert_category_query = "REPLACE INTO Category (id, name, parent_id, is_leaf, n_children, n_series) VALUES(?,?,?,?,?,?)"
         values = [category.cat_id, category.name]
@@ -103,10 +106,10 @@ class DatabaseManager:
 
     def insert_series(self, series: Series, commit_flag):
         """
-        insert a new Series object in the database
-        :param commit_flag:
-        :param series: the series to insert
-        :return: None
+        insert a new Series object in the database\n
+        :param commit_flag: flag used to force commit to db\n
+        :param series: the series to insert\n
+        :return: None\n
         """
         insert_series_query = "REPLACE INTO Series (id, title, category_id, n_observables) VALUES(?,?,?,?)"
         values = [series.series_id, series.title, series.category_id, series.n_observables]
@@ -120,9 +123,9 @@ class DatabaseManager:
 
     def insert_observable(self, observable: Observable, commit_flag):
         """
-        insert a new Observable object in the database
-        :param observable: the observable to insert
-        :return: None
+        insert a new Observable object in the database\n
+        :param observable: the observable to insert\n
+        :return: None\n
         """
         insert_observable_query = "REPLACE INTO Observable(date, value, series_id) VALUES(?,?,?)"
         values = [observable.date, observable.value, observable.series]
@@ -136,9 +139,9 @@ class DatabaseManager:
 
     def get_category(self, category_id) -> Category:
         """
-        retrieve a category with given id from the database
-        :param category_id: the id of the category to fetch
-        :return: Category object
+        retrieve a category with given id from the database\n
+        :param category_id: the id of the category to fetch\n
+        :return: Category object\n
         """
         get_category_query = "SELECT * FROM Category WHERE id=?"
         sub = []
@@ -153,9 +156,9 @@ class DatabaseManager:
 
     def get_series(self, series_id) -> Series:
         """
-        retrieve a series with given id from the database
-        :param series_id: the id of the series to fetch
-        :return: Series object
+        retrieve a series with given id from the database\n
+        :param series_id: the id of the series to fetch\n
+        :return: Series object\n
         """
         get_series_query = "SELECT * FROM Series WHERE id=?"
         try:
@@ -169,9 +172,9 @@ class DatabaseManager:
 
     def get_subcategories(self, category_id) -> [Category]:
         """
-        get a list of children for the given category
-        :param category_id: the id of the category whose children are to be retrieved
-        :return: list of Category type children
+        get a list of children for the given category\n
+        :param category_id: the id of the category whose children are to be retrieved\n
+        :return: list of Category type children\n
         """
         get_subcategory_query = "SELECT * FROM Category WHERE parent_id=?"
         sub = []
@@ -186,8 +189,8 @@ class DatabaseManager:
 
     def get_category_list(self) -> [Category]:
         """
-        get a list of categories
-        :return: list of Category
+        get a list of categories\n
+        :return: list of Category\n
         """
         get_category_list_query = "SELECT * FROM Category"
         category_list = []
@@ -202,9 +205,9 @@ class DatabaseManager:
 
     def get_series_list(self, category_id) -> [Series]:
         """
-        get a list of series of a given category
-        :param category_id: the given category
-        :return: list of Series
+        get a list of series of a given category\n
+        :param category_id: the given category\n
+        :return: list of Series\n
         """
         get_series_list_query = "SELECT * FROM Series WHERE category_id=?"
         series_list = []
@@ -219,9 +222,9 @@ class DatabaseManager:
 
     def get_series_number(self, category_id):
         """
-        get number of series of a given category
-        :param category_id: the given category
-        :return: number of Series integer
+        get number of series of a given category\n
+        :param category_id: the given category\n
+        :return: number of Series integer\n
         """
         get_series_number_query = "SELECT n_series FROM Category WHERE id=?"
         series_number = -1
@@ -235,9 +238,9 @@ class DatabaseManager:
 
     def get_children_number(self, category_id):
         """
-        get the number of children of a given category
-        :param category_id:
-        :return:
+        get the number of children of a given category\n
+        :param category_id:\n
+        :return: children number\n
         """
         get_children_number_query = "SELECT n_children FROM Category WHERE id=?"
         children_number = -1
@@ -251,9 +254,9 @@ class DatabaseManager:
 
     def get_observable_list(self, series_id) -> [Observable]:
         """
-        get a list of observables of a given series
-        :param series_id: the given series
-        :return: list of Observable
+        get a list of observables of a given series\n
+        :param series_id: the given series\n
+        :return: list of Observable\n
         """
         get_observables_query = "SELECT *  FROM Observable WHERE series_id=?"
         observables = []
@@ -268,10 +271,10 @@ class DatabaseManager:
 
     def get_observables_number(self, category_id):
         """
-                get number of series of a given category
-                :param category_id: the given category
-                :return: number of Series integer
-                """
+        get number of series of a given category\n
+        :param category_id: the given category\n
+        :return: number of Series integer\n
+        """
         get_observables_number_query = "SELECT n_observables FROM Series WHERE id=?"
         observables_number = -1
         try:
@@ -284,9 +287,9 @@ class DatabaseManager:
 
     def get_series(self, series_id) -> Series:
         """
-        get the series with the specified id in the database
-        :param series_id: series id
-        :return: a Series object
+        get the series with the specified id in the database\n
+        :param series_id: series id\n
+        :return: a Series object\n
         """
         get_series_query = "SELECT * FROM Series WHERE series_id=?"
         series = []
@@ -301,9 +304,9 @@ class DatabaseManager:
 
     def update_category(self, category: Category):
         """
-        update the category specified in the database
-        :param category: the new state of the Category
-        :return: None
+        update the category specified in the database\n
+        :param category: the new state of the Category\n
+        :return: None\n
         """
         update_category_query = "UPDATE Category SET name=?, parent_id=?, is_leaf=?, n_children=?, n_series=? where id=?"
         values = [category.name, category.parent_id, category.leaf, category.n_children, category.n_series, category.cat_id]
@@ -316,9 +319,9 @@ class DatabaseManager:
 
     def update_series(self, series: Series):
         """
-        update the series specified in the database
-        :param series: the new state of the Series
-        :return: None
+        update the series specified in the database\n
+        :param series: the new state of the Series\n
+        :return: None\n
         """
         update_series_query = "UPDATE Series SET title=?, category_id=?, n_observables=? where id=?"
         values = [series.title, series.category_id, series.n_observables, series.series_id]
@@ -331,9 +334,9 @@ class DatabaseManager:
 
     def update_observable(self, observable: Observable):
         """
-        update the observable specified in the database
-        :param observable: the new state of the Observable
-        :return: None
+        update the observable specified in the database\n
+        :param observable: the new state of the Observable\n
+        :return: None\n
         """
         update_observable_query = "UPDATE Observable SET date=?, value=?, series_id=? where id=?"
         values = [observable.date, observable.value, observable.series, observable.observable_id]
@@ -348,10 +351,10 @@ class DatabaseManager:
         """
         checks if a certain instance with the given attributes is already present
         into the database. This is used to check if an object is to be retrieved from the FRED api
-        or not (see more on documentation)
-        :param model_type: the type of the object to check
-        :param attribute: the attributes of the object
-        :return: the number of elements present in the database. If 0, then the object is not present.
+        or not (see more on documentation)\n
+        :param model_type: the type of the object to check\n
+        :param attribute: the attributes of the object\n
+        :return: the number of elements present in the database. If 0, then the object is not present.\n
         """
         ret = None
         if model_type is ClassType.CHILD:
@@ -373,8 +376,8 @@ class DatabaseManager:
 
     def close_db(self):
         """
-        procedure to close the database connection
-        :return:
+        procedure to close the database connection\n
+        :return: None\n
         """
         self.conn.close()
 

@@ -41,7 +41,7 @@ class Observable:
 
 class ClassType(Enum):
     """
-    enum that represents the model types
+    enum that represents the model types\n
     """
     CATEGORY = 1
     SERIES = 2
@@ -51,10 +51,10 @@ class ClassType(Enum):
 
 def object_convert(model_type: ClassType, dict_state: dict):
     """
-    converts format from dictionary to model object
-    :param model_type: type of the model class
-    :param dict_state: dictionary of the object state
-    :return: object from model
+    converts format from dictionary to model object\n
+    :param model_type: type of the model class\n
+    :param dict_state: dictionary of the object state\n
+    :return: object from model\n
     """
     obj = None
     if model_type is ClassType.CATEGORY:

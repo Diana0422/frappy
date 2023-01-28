@@ -10,7 +10,7 @@ from .model import ClassType, Category, object_convert, Series, Observable
 
 class FredApiManager:
     """
-    class to interact with FRED api
+    class to interact with FRED api\n
     """
 
     def __init__(self, api_key, db_path):
@@ -22,10 +22,10 @@ class FredApiManager:
 
     def _generate_url(self, model_type, value) -> str:
         """
-        private method to generate a specific URL to request to the FRED API
-        :param model_type: type of model class to retrieve
-        :param value: attribute needed to build the specific URL
-        :return: URL string
+        private method to generate a specific URL to request to the FRED API\n
+        :param model_type: type of model class to retrieve\n
+        :param value: attribute needed to build the specific URL\n
+        :return: URL string\n
         """
         specific_url = ""
         if model_type is ClassType.CHILD:
@@ -38,10 +38,10 @@ class FredApiManager:
 
     def _generate_request(self, model_type, attribute) -> [dict]:
         """
-        Private method to make a request to the FRED API
-        :param model_type: type of the model class to retrieve
-        :param attribute: attribute needed to make the request
-        :return: array of dictionaries that represent the objects retrieved
+        Private method to make a request to the FRED API\n
+        :param model_type: type of the model class to retrieve\n
+        :param attribute: attribute needed to make the request\n
+        :return: array of dictionaries that represent the objects retrieved\n
         """
         url = self._generate_url(model_type, attribute)
         conn = requests.get(url)
@@ -71,10 +71,10 @@ class FredApiManager:
 
     def req_cat_start(self, start_category: Category, on_api):
         """
-        check if starting category is on database
-        :param start_category:
-        :param on_api:
-        :return:
+        check if starting category is on database\n
+        :param start_category:\n
+        :param on_api: a boolean that if True specifies whether the categories are to be retrieved from the api\n
+        :return: call function to get all successive categories\n
         """
         check = self.dbm.check_in_database(ClassType.CATEGORY, start_category.cat_id)
         if not check:
@@ -83,11 +83,10 @@ class FredApiManager:
 
     def request_categories(self, start_category: Category, on_api) -> [Category]:
         """
-        request the category tree starting from a category specified
-        :param start_category: the starting category from which to retrieve the tree of sub-categories
-        :param on_api: a boolean that if True specifies whether the categories are to be retrieved
-         from the api
-        :return: list of categories retrieved
+        request the category tree starting from a category specified\n
+        :param start_category: the starting category from which to retrieve the tree of sub-categories\n
+        :param on_api: a boolean that if True specifies whether the categories are to be retrieved from the api\n
+        :return: list of categories retrieved\n
         """
         nodes_to_visit = [start_category]
         ret_categories = []
@@ -140,11 +139,10 @@ class FredApiManager:
 
     def request_series(self, category: Category, on_api) -> [Series]:
         """
-        request the series of a specified category
-        :param category: the category whose series are to be retrieved
-        :param on_api: a boolean that if True specifies whether the series are to be retrieved
-        from the api
-        :return: the requested series list
+        request the series of a specified category\n
+        :param category: the category whose series are to be retrieved\n
+        :param on_api: a boolean that if True specifies whether the series are to be retrieved from the api\n
+        :return: the requested series list\n
         """
         ret_series = []
         check = self.dbm.check_in_database(ClassType.SERIES, category.cat_id)
@@ -178,11 +176,10 @@ class FredApiManager:
 
     def request_observables(self, series: Series, on_api) -> [Observable]:
         """
-        request the observables of a specified series
-        :param series: the series whose observations are to be retrieved
-        :param on_api: a boolean that if True specifies whether the observables are to be retrieved
-        from the api
-        :return: the requested observables list
+        request the observables of a specified series\n
+        :param series: the series whose observations are to be retrieved\n
+        :param on_api: a boolean that if True specifies whether the observables are to be retrieved from the api\n
+        :return: the requested observables list\n
         """
         ret_observables = []
         check = self.dbm.check_in_database(ClassType.OBSERVABLE, series.series_id)
